@@ -1,12 +1,13 @@
 from jap_dev.information import kanjis
+from jap_dev.helpers.kanjis.irregular_radicals import radicals as irregular_radicals
 
 
 def get_all():
-    return kanjis().find()
+    return kanjis().find().sort({'v1': 1})
 
 
 def get_from_components(components):
-    return kanjis().find({'components': {'$all': components}})
+    return kanjis().find({'components': {'$all': components}}).sort({'v1': 1})
 
 
 def check_if_kanji_exists(kanji):
@@ -22,22 +23,25 @@ def insert(kanji_info):
     return inserted_kanji.inserted_id
 
 
-def search_components(spanish, list):
+def fill_radicals(spanish, radicals_list):
     kanji = kanjis().find_one({'spanish': spanish})
-
     if kanji is None:
-        list.append(spanish)
+        radicals_list.append(spanish)
     else:
-        if 'components' in kanji:
-            print(kanji['components'])
-            for component in kanji['components']:
-                search_components(component, list)
+        if 'recursive' in kanji:
+            radicals_list.append(kanji['spanish'])
+        elif spanish in irregular_radicals:
+            for radical in irregular_radicals[spanish]:
+                radicals_list.append(radical)
         else:
-            list.append(kanji['spanish'])
+            if 'components' in kanji:
+                for component in kanji['components']:
+                    fill_radicals(component, radicals_list)
+            else:
+                radicals_list.append(kanji['spanish'])
 
 
-def get_base_components(spanish):
-    components = []
-    print(kanjis().find_one({'spanish': spanish})['kanji'])
-    search_components(spanish, components)
-    return components
+def get_radicals(spanish):
+    radicals_list = []
+    fill_radicals(spanish, radicals_list)
+    return radicals_list

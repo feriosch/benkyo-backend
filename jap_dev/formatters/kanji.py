@@ -45,6 +45,8 @@ def format_kanji_insertion(kanji_info):
         formatted_object['kun'] = kanji_info['kun']
     if 'components' in kanji_info and len(kanji_info['components']) > 0:
         formatted_object['components'] = kanji_info['components']
+        if kanji_info['spanish'] in set(kanji_info['components']):
+            formatted_object['recursive'] = True
     if 'story' in kanji_info:
         formatted_object['story'] = kanji_info['story']
     return formatted_object
