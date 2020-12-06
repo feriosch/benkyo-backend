@@ -3,6 +3,7 @@ def _format_kanji(kanji):
     kun = None
     components = None
     story = None
+    recursive = False
     if 'on' in kanji:
         on = kanji['on']
     if 'kun' in kanji:
@@ -11,6 +12,8 @@ def _format_kanji(kanji):
         components = kanji['components']
     if 'story' in kanji:
         story = kanji['story']
+    if 'recursive' in kanji:
+        recursive = True
     return {
         'id': str(kanji['_id']),
         'v1': int(kanji['v1']),
@@ -20,7 +23,9 @@ def _format_kanji(kanji):
         'kun': kun,
         'spanish': kanji['spanish'],
         'components': components,
-        'story': story
+        'radicals': kanji['radicals'],
+        'story': story,
+        'recursive': recursive
     }
 
 
