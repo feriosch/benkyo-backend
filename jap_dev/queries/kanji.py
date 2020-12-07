@@ -3,11 +3,11 @@ from jap_dev.helpers.kanjis.irregular_radicals import radicals as irregular_radi
 
 
 def get_all():
-    return kanjis().find().sort({'v1': 1})
+    return kanjis().find().sort('v1')
 
 
 def get_from_components(components):
-    return kanjis().find({'components': {'$all': components}}).sort({'v1': 1})
+    return kanjis().find({'components': {'$all': components}}).sort('v1')
 
 
 def check_if_kanji_exists(kanji):
