@@ -22,10 +22,13 @@ class Word (MethodView):
 
 
 class SearchOne (MethodView):
-    decorators = [authenticate_jwt(), validate_schema('search_word_schema')]
+    decorators = [authenticate_jwt(), validate_schema('search_one_word_schema')]
 
     def get(self, params):
-        return make_response(word.search_one_response(params['word']))
+        if 'word' in params:
+            return make_response(word.search_one_by_word_response(params['word']))
+        elif 'word_id' in params:
+            return make_response(word.search_one_by_id_response(params['word_id']))
 
 
 class SearchMany (MethodView):

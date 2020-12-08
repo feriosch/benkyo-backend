@@ -1,4 +1,4 @@
-from schema import Schema, Use, And, Optional
+from schema import Schema, Use, And, Optional, Or
 
 
 test_schema = Schema({
@@ -97,6 +97,12 @@ word_schema_put = Schema({
 search_word_schema = Schema({
     'word': Use(str, error="Word Is Missing")
 })
+
+search_one_word_schema = Or(
+    Schema({'word': Use(str, error="Word Is Missing")}),
+    Schema({'word_id': Use(str, error="Id Is Missing")}),
+    error="Schema error: Only use word or id as parameter"
+)
 
 update_word_level_schema = Schema({
     'word_id': Use(str, error="Id is missing"),

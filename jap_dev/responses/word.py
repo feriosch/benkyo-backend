@@ -1,4 +1,5 @@
 from flask import (jsonify)
+from bson.objectid import ObjectId
 
 from jap_dev.queries import word as queries
 from jap_dev.formatters import word as formatter
@@ -28,9 +29,20 @@ def create_word_response(word_info):
     return jsonify(id_formatter.format_response_id(inserted_id))
 
 
-def search_one_response(word):
-    result = queries.search_one(word)
-    return jsonify(formatter.format_all_words(result))
+def search_one_by_word_response(word):
+    result = queries.search_one_by_word(word)
+    if result is None:
+        return {'error': 'No matched word'}, 400
+    return jsonify(formatter.format_word(result))
+
+
+def search_one_by_id_response(word_id):
+    if not ObjectId.is_valid(word_id):
+        return {'error': 'Invalid ID'}, 400
+    result = queries.search_one_by_id(word_id)
+    if result is None:
+        return {'error': 'No matched word'}, 400
+    return jsonify(formatter.format_word(result))
 
 
 def search_many_response(word):

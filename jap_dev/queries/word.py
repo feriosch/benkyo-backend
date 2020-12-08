@@ -20,8 +20,12 @@ def insert(word):
     return inserted_word.inserted_id
 
 
-def search_one(word):
-    return words().find({'word': word})
+def search_one_by_word(word):
+    return words().find_one({'word': word})
+
+
+def search_one_by_id(word_id):
+    return words().find_one({'_id': ObjectId(word_id)})
 
 
 def search_many(word):
