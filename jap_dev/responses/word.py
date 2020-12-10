@@ -32,7 +32,7 @@ def create_word_response(word_info):
 def search_one_by_word_response(word):
     result = queries.search_one_by_word(word)
     if result is None:
-        return {'error': 'No matched word'}, 400
+        return jsonify(result)
     return jsonify(formatter.format_word(result))
 
 
