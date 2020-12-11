@@ -68,5 +68,5 @@ def update_word_level(word_id, success):
         if not success and word['level'] > 0:
             words().update_one({'_id': ObjectId(word_id)}, {'$inc': {'level': -1}})
             return True
-        return False
+        return True
     return False
