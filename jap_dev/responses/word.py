@@ -45,6 +45,20 @@ def search_one_by_id_response(word_id):
     return jsonify(formatter.format_word(result))
 
 
+def search_one_random_by_collection_response(collection):
+    result = list(queries.search_one_random_by_collection(collection))
+    if not result:
+        return {'error': 'No words found in collection'}, 400
+    return jsonify(formatter.format_word(result[0]))
+
+
+def search_one_random_response():
+    result = list(queries.search_one_random())
+    if not result:
+        return {'error': 'No words found'}, 400
+    return jsonify(formatter.format_word(result[0]))
+
+
 def search_many_response(word):
     result = queries.search_many(word)
     return jsonify(formatter.format_all_words(result))
