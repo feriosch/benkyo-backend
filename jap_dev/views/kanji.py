@@ -14,3 +14,17 @@ class Kanji (MethodView):
 
     def post(self, body):
         return make_response(kanji.create_response(body))
+
+
+class VerifyExistence (MethodView):
+    decorators = [authenticate_jwt(), validate_schema('exists_kanji_schema')]
+
+    def get(self, params):
+        if 'v1' in params:
+            return make_response(kanji.check_if_v1_exists_response(int(params['v1'])))
+        elif 'kanji' in params:
+            return make_response(kanji.check_if_kanji_exists_response(params['kanji']))
+        elif 'spanish' in params:
+            return make_response(kanji.check_if_spanish_exists_response(params['spanish']))
+        else:
+            return make_response({'error': 'Invalid params'}, 400)

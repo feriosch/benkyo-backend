@@ -24,15 +24,27 @@ def get_with_components_response(parameters):
     return jsonify(formatter.format_all_kanjis(result))
 
 
+def check_if_v1_exists_response(v1):
+    return jsonify(queries.check_if_v1_exists(v1))
+
+
+def check_if_kanji_exists_response(kanji):
+    return jsonify(queries.check_if_kanji_exists(kanji))
+
+
+def check_if_spanish_exists_response(spanish):
+    return jsonify(queries.check_if_spanish_exists(spanish))
+
+
 def create_response(kanji_info):
     if len(kanji_info['kanji']) != 1:
         return {'error': 'Kanji should be just one character'}, 400
+    if queries.check_if_v1_exists(kanji_info['v1']):
+        return {'error': 'V1 already exists'}, 400
     if queries.check_if_kanji_exists(kanji_info['kanji']):
         return {'error': 'Kanji already exists'}, 400
     if queries.check_if_spanish_exists(kanji_info['spanish']):
         return {'error': 'Spanish already exists'}, 400
-    if queries.check_if_v1_exists(kanji_info['v1']):
-        return {'error': 'V1 already exists'}, 400
     formatted_kanji = formatter.format_kanji_insertion(kanji_info)
     formatted_kanji['radicals'] = queries.get_radicals(kanji_info['spanish'])
     inserted_id = queries.insert(formatted_kanji)

@@ -4,7 +4,7 @@ from flask_cors import CORS
 
 from jap_dev.helpers.exceptions import BadRequestException, UnauthorizedException
 from jap_dev.views.user import User, Login
-from jap_dev.views.kanji import Kanji
+from jap_dev.views.kanji import Kanji, VerifyExistence as VerifyKanjiExistence
 from jap_dev.views.group_collection import GroupCollection
 from jap_dev.views.word import Word, SearchOne, SearchMany, UpdateLevel
 
@@ -21,6 +21,7 @@ def status_check():
 user_view = User.as_view('user')
 login_view = Login.as_view('login')
 kanji_view = Kanji.as_view('kanjis')
+verify_kanji_existence_view = VerifyKanjiExistence.as_view('exists')
 group_collection_view = GroupCollection.as_view('groupcollection')
 search_one_view = SearchOne.as_view('searchone')
 search_many_view = SearchMany.as_view('searchmany')
@@ -43,6 +44,12 @@ application.add_url_rule(
     '/kanjis',
     view_func=kanji_view,
     methods=['GET', 'POST']
+)
+
+application.add_url_rule(
+    '/kanjis/exists',
+    view_func=verify_kanji_existence_view,
+    methods=['GET']
 )
 
 application.add_url_rule(

@@ -131,3 +131,10 @@ kanji_schema_post = Schema({
     ]),
     Optional('story'): Use(str, error='story error'),
 })
+
+exists_kanji_schema = Or(
+    Schema({'v1': Use(int, error='v1 error')}),
+    Schema({'kanji': Use(str, error='kanji error')}),
+    Schema({'spanish': Use(str, error='spanish error')}),
+    error='Schema error: Only use v1, kanji or spanish as parameter',
+)
