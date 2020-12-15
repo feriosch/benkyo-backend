@@ -18,6 +18,10 @@ def check_if_spanish_exists(spanish):
     return kanjis().find({'spanish': spanish}).count() > 0
 
 
+def check_if_v1_exists(v1):
+    return kanjis().find({'v1': v1}).count() > 0
+
+
 def insert(kanji_info):
     inserted_kanji = kanjis().insert_one(kanji_info)
     return inserted_kanji.inserted_id
