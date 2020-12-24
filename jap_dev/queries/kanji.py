@@ -45,7 +45,8 @@ def fill_radicals(spanish, radicals_list):
                 radicals_list.append(kanji['spanish'])
 
 
-def get_radicals(spanish):
+def get_radicals(components):
     radicals_list = []
-    fill_radicals(spanish, radicals_list)
+    for component in components:
+        fill_radicals(component, radicals_list)
     return radicals_list

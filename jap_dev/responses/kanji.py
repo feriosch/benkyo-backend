@@ -46,6 +46,9 @@ def create_response(kanji_info):
     if queries.check_if_spanish_exists(kanji_info['spanish']):
         return {'error': 'Spanish already exists'}, 400
     formatted_kanji = formatter.format_kanji_insertion(kanji_info)
-    formatted_kanji['radicals'] = queries.get_radicals(kanji_info['spanish'])
+    if 'components' in kanji_info:
+        formatted_kanji['radicals'] = queries.get_radicals(kanji_info['components'])
+    else:
+        formatted_kanji['radicals'] = queries.get_radicals(list(kanji_info['spanish']))
     inserted_id = queries.insert(formatted_kanji)
     return jsonify(id_formatter.format_response_id(inserted_id))
