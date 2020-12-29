@@ -15,6 +15,9 @@ class Kanji (MethodView):
     def post(self, body):
         return make_response(kanji.create_response(body))
 
+    def put(self, body):
+        return make_response(kanji.update_response(body))
+
 
 class VerifyExistence (MethodView):
     decorators = [authenticate_jwt(), validate_schema('exists_kanji_schema')]

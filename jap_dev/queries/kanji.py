@@ -1,3 +1,5 @@
+from bson.objectid import ObjectId
+
 from jap_dev.information import kanjis
 from jap_dev.helpers.kanjis.irregular_radicals import radicals as irregular_radicals
 
@@ -50,3 +52,17 @@ def get_radicals(components):
     for component in components:
         fill_radicals(component, radicals_list)
     return radicals_list
+
+
+def update_kanji(kanji_id, deleted_fields, info):
+    kanji = kanjis().find_one({'id': ObjectId(kanji_id)})
+    if kanji:
+        kanjis().update_one(
+            {'_id': ObjectId(kanji_id)},
+            {
+                {'$unset': deleted_fields},
+                {'$set': info}
+            }
+        )
+        return True
+    return False

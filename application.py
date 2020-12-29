@@ -43,7 +43,7 @@ application.add_url_rule(
 application.add_url_rule(
     '/kanjis',
     view_func=kanji_view,
-    methods=['GET', 'POST']
+    methods=['GET', 'POST', 'PUT']
 )
 
 application.add_url_rule(

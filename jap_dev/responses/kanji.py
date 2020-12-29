@@ -52,3 +52,16 @@ def create_response(kanji_info):
         formatted_kanji['radicals'] = queries.get_radicals(list(kanji_info['spanish']))
     inserted_id = queries.insert(formatted_kanji)
     return jsonify(id_formatter.format_response_id(inserted_id))
+
+
+def update_response(kanji_info):
+    if len(kanji_info['kanji']) != 1:
+        return {'error': 'Kanji should be just one character'}, 400
+    kanji_id = kanji_info['kanji_id']
+    formatted_kanji = formatter.format_kanji_insertion(kanji_info)
+    deleted_fields = formatter.format_deleted_fields(kanji_info)
+    if 'components' in kanji_info:
+        formatted_kanji['radicals'] = queries.get_radicals(kanji_info['components'])
+    else:
+        formatted_kanji['radicals'] = queries.get_radicals(list(kanji_info['spanish']))
+    return queries.update_kanji(kanji_id, deleted_fields, formatted_kanji)
