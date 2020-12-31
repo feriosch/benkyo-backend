@@ -69,3 +69,4 @@ def format_deleted_fields(kanji_info):
         deleted_fields.append('components')
     if 'story' not in kanji_info:
         deleted_fields.append('story')
+    return deleted_fields

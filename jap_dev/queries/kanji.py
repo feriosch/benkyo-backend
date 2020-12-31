@@ -55,14 +55,14 @@ def get_radicals(components):
 
 
 def update_kanji(kanji_id, deleted_fields, info):
-    kanji = kanjis().find_one({'id': ObjectId(kanji_id)})
+    kanji = kanjis().find_one({'_id': ObjectId(kanji_id)})
     if kanji:
         kanjis().update_one(
             {'_id': ObjectId(kanji_id)},
-            {
+            [
                 {'$unset': deleted_fields},
-                {'$set': info}
-            }
+                {'$set': info},
+            ],
         )
         return True
     return False
