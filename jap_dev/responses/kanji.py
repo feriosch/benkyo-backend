@@ -68,4 +68,7 @@ def update_response(kanji_info):
         formatted_kanji['radicals'] = queries.get_radicals(kanji_info['components'])
     else:
         formatted_kanji['radicals'] = queries.get_radicals([kanji_info['spanish']])
-    return jsonify(queries.update_kanji(kanji_id, deleted_fields, formatted_kanji))
+    if deleted_fields:
+        return jsonify(queries.update_kanji_deleting_fields(kanji_id, deleted_fields, formatted_kanji))
+    else:
+        return jsonify(queries.update_kanji(kanji_id, formatted_kanji))
