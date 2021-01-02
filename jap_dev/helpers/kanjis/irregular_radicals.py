@@ -6,4 +6,5 @@ radicals = {
     'cueva': ['cueva'],
     'codo': ['codo'],
     'mono': ['mono'],
+    'anciano': ['tierra', 'baston']
 }
