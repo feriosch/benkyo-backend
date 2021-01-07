@@ -31,3 +31,12 @@ class VerifyExistence (MethodView):
             return make_response(kanji.check_if_spanish_exists_response(params['spanish']))
         else:
             return make_response({'error': 'Invalid params'}, 400)
+
+
+class Components (MethodView):
+    decorators = [authenticate_jwt(), validate_schema('kanji_components_schema')]
+
+    def get(self, params):
+        if 'starting' in params:
+            return make_response(kanji.get_distinct_components_response(params['starting']))
+        return make_response(kanji.get_distinct_components_response())
