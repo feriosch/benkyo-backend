@@ -74,3 +74,7 @@ def update_kanji_deleting_fields(kanji_id, deleted_fields, info):
         )
         return True
     return False
+
+
+def get_distinct_components():
+    return kanjis().distinct('components')

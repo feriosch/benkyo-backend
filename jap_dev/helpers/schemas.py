@@ -152,3 +152,7 @@ exists_kanji_schema = Or(
     Schema({'spanish': Use(str, error='spanish error')}),
     error='Schema error: Only use v1, kanji or spanish as parameter',
 )
+
+kanji_components_schema = Schema({
+    Optional('starting'): Use(str, error='starting error'),
+})
