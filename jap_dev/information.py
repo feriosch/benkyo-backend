@@ -15,3 +15,7 @@ def users():
 
 def kanjis():
     return database['kanjis']
+
+
+def kanji_irregular_components():
+    return database['kanjiIrregularComponents']

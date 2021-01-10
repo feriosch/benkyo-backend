@@ -1,7 +1,6 @@
 from bson.objectid import ObjectId
 
-from jap_dev.information import kanjis
-from jap_dev.helpers.kanjis.irregular_radicals import radicals as irregular_radicals
+from jap_dev.information import kanjis, kanji_irregular_components
 
 
 def get_all():
@@ -29,15 +28,22 @@ def insert(kanji_info):
     return inserted_kanji.inserted_id
 
 
+def find_irregular_radicals(component):
+    found_component = kanji_irregular_components().find_one({'component': component})
+    if found_component:
+        return found_component['radicals']
+
+
 def fill_radicals(spanish, radicals_list):
     kanji = kanjis().find_one({'spanish': spanish})
+    irregular_radicals = find_irregular_radicals(spanish)
     if kanji is None:
         radicals_list.append(spanish)
     else:
         if 'recursive' in kanji:
             radicals_list.append(kanji['spanish'])
-        elif spanish in irregular_radicals:
-            for radical in irregular_radicals[spanish]:
+        elif irregular_radicals:
+            for radical in irregular_radicals:
                 radicals_list.append(radical)
         else:
             if 'components' in kanji:
