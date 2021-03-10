@@ -19,6 +19,14 @@ class Kanji (MethodView):
         return make_response(kanji.update_response(body))
 
 
+class SearchOne(MethodView):
+    decorators = [authenticate_jwt()]
+    # TODO: Schema decorators (params)
+
+    def get(self):
+        return make_response(kanji.get_one_random_response())
+
+
 class VerifyExistence (MethodView):
     decorators = [authenticate_jwt(), validate_schema('exists_kanji_schema')]
 
