@@ -156,3 +156,9 @@ exists_kanji_schema = Or(
 kanji_components_schema = Schema({
     Optional('starting'): Use(str, error='starting error'),
 })
+
+# TODO: Search one kanji schemas
+search_one_kanji_schema = Or(
+    Schema({}),
+    error='Schema error: Search one kanji',
+)

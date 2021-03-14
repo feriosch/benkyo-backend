@@ -1,4 +1,4 @@
-def _format_kanji(kanji):
+def format_kanji(kanji):
     v2 = None
     on = None
     kun = None
@@ -35,7 +35,7 @@ def _format_kanji(kanji):
 def format_all_kanjis(kanjis):
     result = []
     for kanji in kanjis:
-        result.append(_format_kanji(kanji))
+        result.append(format_kanji(kanji))
     return result
 
 

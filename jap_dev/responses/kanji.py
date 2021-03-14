@@ -24,6 +24,13 @@ def get_with_components_response(parameters):
     return jsonify(formatter.format_all_kanjis(result))
 
 
+def get_one_random_response():
+    result = list(queries.get_one_random())
+    if not result:
+        return {'error': 'No kanjis found'}, 400
+    return jsonify(formatter.format_kanji(result[0]))
+
+
 def check_if_v1_exists_response(v1):
     return jsonify(queries.check_if_v1_exists(v1))
 

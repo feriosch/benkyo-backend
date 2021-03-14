@@ -11,6 +11,12 @@ def get_from_components(components):
     return kanjis().find({'components': {'$all': components}}).sort('v1')
 
 
+def get_one_random():
+    return kanjis().aggregate([
+        {'$sample': {'size': 1}}
+    ])
+
+
 def check_if_kanji_exists(kanji):
     return kanjis().find({'kanji': kanji}).count() > 0
 
