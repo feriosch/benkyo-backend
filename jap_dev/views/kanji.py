@@ -20,10 +20,10 @@ class Kanji (MethodView):
 
 
 class SearchOne(MethodView):
-    decorators = [authenticate_jwt()]
-    # TODO: Schema decorators (params)
+    decorators = [authenticate_jwt(), validate_schema('search_one_kanji_schema')]
 
-    def get(self):
+    # TODO: Schema decorators (params)
+    def get(self, params):
         return make_response(kanji.get_one_random_response())
 
 
