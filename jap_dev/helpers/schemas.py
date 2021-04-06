@@ -155,6 +155,7 @@ exists_kanji_schema = Or(
 
 kanji_components_schema = Schema({
     Optional('starting'): Use(str, error='starting error'),
+    Optional('limit'): And(Use(int), lambda x: 0 < x < 50, error='limit error'),
 })
 
 # TODO: Search one kanji schemas

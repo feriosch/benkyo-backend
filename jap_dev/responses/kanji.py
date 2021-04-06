@@ -81,9 +81,10 @@ def update_response(kanji_info):
         return jsonify(queries.update_kanji(kanji_id, formatted_kanji))
 
 
-def get_distinct_components_response(starting=None):
+def get_distinct_components_response(starting=None, limit=None):
+    components = list(queries.get_distinct_components())
     if starting:
-        return jsonify(
-            list(filter(lambda x: x.startswith(starting), queries.get_distinct_components()))
-        )
-    return jsonify(queries.get_distinct_components())
+        components = list(filter(lambda x: x.startswith(starting), queries.get_distinct_components()))
+    if limit:
+        components = components[:limit]
+    return jsonify(components)
