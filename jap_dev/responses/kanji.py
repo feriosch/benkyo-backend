@@ -1,4 +1,5 @@
 from flask import (jsonify)
+from bson.objectid import ObjectId
 
 from jap_dev.queries import kanji as queries
 from jap_dev.formatters import kanji as formatter
@@ -19,9 +20,10 @@ def get_with_components_response(parameters):
         components.append(parameters['component_5'])
     if components:
         result = queries.get_from_components(components)
+        return jsonify(formatter.format_all_summarized_kanjis(result))
     else:
         result = queries.get_all()
-    return jsonify(formatter.format_all_kanjis(result))
+        return jsonify(formatter.format_all_kanjis(result))
 
 
 def get_one_random_response():
@@ -29,6 +31,15 @@ def get_one_random_response():
     if not result:
         return {'error': 'No kanjis found'}, 400
     return jsonify(formatter.format_kanji(result[0]))
+
+
+def get_one_by_id_response(kanji_id):
+    if not ObjectId.is_valid(kanji_id):
+        return {'error': 'Invalid ID'}, 400
+    result = queries.get_one_by_id(kanji_id)
+    if result is None:
+        return {'error': 'No matched kanji'}, 400
+    return jsonify(formatter.format_kanji(result))
 
 
 def check_if_v1_exists_response(v1):
@@ -81,9 +92,10 @@ def update_response(kanji_info):
         return jsonify(queries.update_kanji(kanji_id, formatted_kanji))
 
 
-def get_distinct_components_response(starting=None):
+def get_distinct_components_response(starting=None, limit=None):
+    components = list(queries.get_distinct_components())
     if starting:
-        return jsonify(
-            list(filter(lambda x: x.startswith(starting), queries.get_distinct_components()))
-        )
-    return jsonify(queries.get_distinct_components())
+        components = list(filter(lambda x: x.startswith(starting), queries.get_distinct_components()))
+    if limit:
+        components = components[:limit]
+    return jsonify(components)

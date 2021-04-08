@@ -22,8 +22,9 @@ class Kanji (MethodView):
 class SearchOne(MethodView):
     decorators = [authenticate_jwt(), validate_schema('search_one_kanji_schema')]
 
-    # TODO: Schema decorators (params)
     def get(self, params):
+        if 'kanji_id' in params:
+            return make_response(kanji.get_one_by_id_response(params['kanji_id']))
         return make_response(kanji.get_one_random_response())
 
 
@@ -45,6 +46,10 @@ class Components (MethodView):
     decorators = [authenticate_jwt(), validate_schema('kanji_components_schema')]
 
     def get(self, params):
+        starting = None
+        limit = None
         if 'starting' in params:
-            return make_response(kanji.get_distinct_components_response(params['starting']))
-        return make_response(kanji.get_distinct_components_response())
+            starting = params['starting']
+        if 'limit' in params:
+            limit = int(params['limit'])
+        return make_response(kanji.get_distinct_components_response(starting=starting, limit=limit))
