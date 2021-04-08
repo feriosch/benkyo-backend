@@ -22,8 +22,9 @@ class Kanji (MethodView):
 class SearchOne(MethodView):
     decorators = [authenticate_jwt(), validate_schema('search_one_kanji_schema')]
 
-    # TODO: Schema decorators (params)
     def get(self, params):
+        if 'kanji_id' in params:
+            return make_response(kanji.get_one_by_id_response(params['kanji_id']))
         return make_response(kanji.get_one_random_response())
 
 

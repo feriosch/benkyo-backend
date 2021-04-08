@@ -32,10 +32,25 @@ def format_kanji(kanji):
     }
 
 
+def format_summarized_kanji(kanji):
+    return {
+        'id': str(kanji['_id']),
+        'kanji': kanji['kanji'],
+        'spanish': kanji['spanish']
+    }
+
+
 def format_all_kanjis(kanjis):
     result = []
     for kanji in kanjis:
         result.append(format_kanji(kanji))
+    return result
+
+
+def format_all_summarized_kanjis(kanjis):
+    result = []
+    for kanji in kanjis:
+        result.append(format_summarized_kanji(kanji))
     return result
 
 

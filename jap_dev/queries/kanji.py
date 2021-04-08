@@ -11,6 +11,10 @@ def get_from_components(components):
     return kanjis().find({'components': {'$all': components}}).sort('v1')
 
 
+def get_one_by_id(kanji_id):
+    return kanjis().find_one({'_id': ObjectId(kanji_id)})
+
+
 def get_one_random():
     return kanjis().aggregate([
         {'$sample': {'size': 1}}
