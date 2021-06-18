@@ -9,7 +9,7 @@ from jap_dev.views.kanji import Kanji,\
     Components as KanjiComponents,\
     SearchOne as KanjiSearchOne
 from jap_dev.views.group_collection import GroupCollection
-from jap_dev.views.word import Word, SearchOne, SearchMany, UpdateLevel
+from jap_dev.views.word import Word, SearchOne, SearchMany, UpdateLevel, CSV
 
 application = Flask(__name__)
 CORS(application)
@@ -31,6 +31,7 @@ search_one_view = SearchOne.as_view('searchone')
 search_many_view = SearchMany.as_view('searchmany')
 update_word_level_view = UpdateLevel.as_view('updatewordlevel')
 words_view = Word.as_view('words')
+csv_view = CSV.as_view('csv')
 
 application.add_url_rule(
     '/users',
@@ -96,6 +97,12 @@ application.add_url_rule(
     '/words',
     view_func=words_view,
     methods=['GET', 'POST', 'PUT']
+)
+
+application.add_url_rule(
+    '/words/csv',
+    view_func=csv_view,
+    methods=['GET']
 )
 
 

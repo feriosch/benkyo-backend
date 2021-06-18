@@ -1,5 +1,6 @@
 from flask import (jsonify)
 from bson.objectid import ObjectId
+from pandas import DataFrame
 
 from jap_dev.queries import word as queries
 from jap_dev.formatters import word as formatter
@@ -77,3 +78,14 @@ def update_level_response(word_id, success):
     if queries.update_word_level(word_id, bool_success):
         return {'id': word_id}, 200
     return {'error': 'No matched word'}, 400
+
+
+def csv_response(collection):
+    df = DataFrame.from_dict(queries.get_words_for_csv(collection))
+    if not df.empty:
+        if collection:
+            df.to_csv(f'{collection}.csv', index=False)
+        else:
+            df.to_csv('benkyo.csv', index=False)
+        return {'message': f'Success. Saved as {collection}.csv'}, 200
+    return {'error': 'CSV error'}, 400

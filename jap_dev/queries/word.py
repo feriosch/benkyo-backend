@@ -70,3 +70,10 @@ def update_word_level(word_id, success):
             return True
         return True
     return False
+
+
+def get_words_for_csv(collection=None):
+    if collection:
+        return words().find({'from': collection}, {'_id': 0, 'word': 1, 'hiragana': 1, 'spanish': 1})
+    else:
+        return words().find({}, {'_id': 0, 'word': 1, 'hiragana': 1, 'spanish': 1})

@@ -47,3 +47,13 @@ class UpdateLevel (MethodView):
 
     def put(self, body):
         return make_response(word.update_level_response(body['word_id'], body['success']))
+
+
+class CSV (MethodView):
+    decorators = [authenticate_jwt(), validate_schema('word_schema')]
+
+    def get(self, params):
+        if 'from' in params:
+            return make_response(word.csv_response(params['from']))
+        else:
+            return make_response(word.csv_response(None))
