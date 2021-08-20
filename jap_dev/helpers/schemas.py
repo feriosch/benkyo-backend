@@ -63,7 +63,11 @@ word_tags_schema = Schema({
 })
 
 word_schema = Schema({
-    Optional('from'): Use(str, error='from (collection) parameter invalid')
+    Optional('from'): Use(str),
+    Optional('order_field'): Use(str),
+    Optional('order_direction'): Use(str),
+    Optional('page_size'): Use(int),
+    Optional('page_number'): Use(int)
 })
 
 word_schema_post = Schema({

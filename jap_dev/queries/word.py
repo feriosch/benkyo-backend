@@ -7,12 +7,39 @@ def get_all():
     return words().find()
 
 
-def get_words_from(collection):
-    return words().find({'from': collection})
+def get_words(collection, order_field, order_direction, page_size, page_number):
+    pipeline = []
+    if collection:
+        pipeline.append({'$match': {'from': collection}})
+    if order_field:
+        pipeline.append({'$sort': {order_field: order_direction}})
+    if page_size:
+        skips = page_size * (page_number - 1)
+        pipeline.append({'$skip': skips})
+        pipeline.append({'$limit': page_size})
+    return words().aggregate(pipeline)
 
 
-def check_if_exists(word):
+def get_next_page_number(collection, result_size, page_size, page_number):
+    if not page_size:
+        return ''
+    if collection:
+        total_word_count = words().find({'from': collection}).count()
+    else:
+        total_word_count = words().find().count()
+    skips = page_size * (page_number - 1)
+    if skips + result_size < total_word_count:
+        return str(page_number + 1)
+    else:
+        return ''
+
+
+def check_if_word_exists(word):
     return words().find({'word': word}).count() > 0
+
+
+def check_if_collection_exists(collection):
+    return collection in words().distinct('from')
 
 
 def insert(word):

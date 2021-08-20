@@ -20,8 +20,6 @@ def validate_schema(schema):
                     schema_fac.load_schema().validate(body)
                     return func(body)
                 else:
-                    print(request.method)
-                    print(type(request.method))
                     raise SchemaError('Method not supported.')
             except SchemaError as error:
                 return make_response(

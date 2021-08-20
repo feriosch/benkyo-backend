@@ -10,9 +10,7 @@ class Word (MethodView):
     decorators = [authenticate_jwt(), validate_schema('word_schema')]
 
     def get(self, params):
-        if 'from' in params:
-            return make_response(word.get_from_collection_response(params['from']))
-        return make_response(word.get_all_response())
+        return make_response(word.get_words_response(params))
 
     def post(self, body):
         return make_response(word.create_word_response(body))
