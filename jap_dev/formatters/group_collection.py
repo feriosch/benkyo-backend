@@ -3,7 +3,8 @@ def _format_one(collection):
         'id': str(collection['_id']),
         'printing_name': collection['printing_name'],
         'collection_name': collection['collection_name'],
-        'group': collection['group']
+        'group': collection['group'],
+        'image_url': collection['image_url']
     }
 
 

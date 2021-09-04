@@ -9,6 +9,7 @@ from jap_dev.formatters import id_formatter
 
 def get_words_response(params):
     collection = None
+    filter_by = None
     order_field = None
     order_direction = None
     page_size = None
@@ -18,6 +19,8 @@ def get_words_response(params):
         collection = params['from']
         if not queries.check_if_collection_exists(collection):
             return {'error': 'Collection not found'}, 400
+    if 'filter_by' in params:
+        filter_by = params['filter_by']
     if 'order_field' in params:
         order_field = params['order_field']
         if 'order_direction' in params:
@@ -40,7 +43,14 @@ def get_words_response(params):
         else:
             page_number = 1
 
-    words = queries.get_words(collection, order_field, order_direction, page_size, page_number)
+    words = queries.get_words(
+        collection=collection,
+        filter_by=filter_by,
+        order_field=order_field,
+        order_direction=order_direction,
+        page_size=page_size,
+        page_number=page_number
+    )
     formatted_words = formatter.format_all_words(words)
     next_page_number = queries.get_next_page_number(collection, len(formatted_words), page_size, page_number)
 

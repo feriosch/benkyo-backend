@@ -64,6 +64,7 @@ word_tags_schema = Schema({
 
 word_schema = Schema({
     Optional('from'): Use(str),
+    Optional('filter_by'): Use(str),
     Optional('order_field'): Use(str),
     Optional('order_direction'): Use(str),
     Optional('page_size'): Use(int),

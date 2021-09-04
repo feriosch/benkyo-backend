@@ -7,10 +7,23 @@ def get_all():
     return words().find()
 
 
-def get_words(collection, order_field, order_direction, page_size, page_number):
+def get_words(collection, filter_by, order_field, order_direction, page_size, page_number):
     pipeline = []
     if collection:
         pipeline.append({'$match': {'from': collection}})
+    if filter_by:
+        pipeline.append({
+            '$match': {
+                '$or': [
+                    {'word': {'$regex': '^' + filter_by}},
+                    {'hiragana': {'$regex': '^' + filter_by}},
+                    {'spanish': {
+                        '$regex': filter_by,
+                        '$options': 'i'
+                    }}
+                ]
+            }
+        })
     if order_field:
         pipeline.append({'$sort': {order_field: order_direction}})
     if page_size:

@@ -77,7 +77,7 @@ application.add_url_rule(
 )
 
 application.add_url_rule(
-    '/groupcollections',
+    '/collections',
     view_func=group_collection_view,
     methods=['GET', 'POST']
 )
