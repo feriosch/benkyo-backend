@@ -1,3 +1,5 @@
+import math
+
 from bson.objectid import ObjectId
 
 from jap_dev.information import words
@@ -26,25 +28,24 @@ def get_words(collection, filter_by, order_field, order_direction, page_size, pa
         })
     if order_field:
         pipeline.append({'$sort': {order_field: order_direction}})
+    word_count = len(list(words().aggregate(pipeline)))
     if page_size:
         skips = page_size * (page_number - 1)
         pipeline.append({'$skip': skips})
         pipeline.append({'$limit': page_size})
-    return words().aggregate(pipeline)
+    return words().aggregate(pipeline), word_count
 
 
-def get_next_page_number(collection, result_size, page_size, page_number):
+def get_pagination_details(total_word_count, result_size, page_size, page_number):
+    total_page_count = 1
     if not page_size:
-        return ''
-    if collection:
-        total_word_count = words().find({'from': collection}).count()
-    else:
-        total_word_count = words().find().count()
+        return total_page_count, ''
     skips = page_size * (page_number - 1)
+    total_page_count = math.ceil(total_word_count / page_size)
     if skips + result_size < total_word_count:
-        return str(page_number + 1)
+        return total_page_count, str(page_number + 1)
     else:
-        return ''
+        return total_page_count, ''
 
 
 def check_if_word_exists(word):

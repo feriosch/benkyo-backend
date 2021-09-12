@@ -43,7 +43,7 @@ def get_words_response(params):
         else:
             page_number = 1
 
-    words = queries.get_words(
+    words, word_count = queries.get_words(
         collection=collection,
         filter_by=filter_by,
         order_field=order_field,
@@ -52,11 +52,18 @@ def get_words_response(params):
         page_number=page_number
     )
     formatted_words = formatter.format_all_words(words)
-    next_page_number = queries.get_next_page_number(collection, len(formatted_words), page_size, page_number)
+    page_count, next_page_number = queries.get_pagination_details(
+        word_count,
+        len(formatted_words),
+        page_size,
+        page_number
+    )
 
     return {
         'words': formatted_words,
-        'next_page_number': next_page_number
+        'next_page_number': next_page_number,
+        'total_pages': page_count,
+        'total_words': word_count
     }
 
 
