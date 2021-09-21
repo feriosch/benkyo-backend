@@ -9,9 +9,9 @@ from jap_dev.responses import group_collection
 class GroupCollection (MethodView):
     decorators = [validate_schema('group_collections_schema')]
 
-    def get(self, _params):
+    def get(self, params):
         validate_session(request)
-        return make_response(group_collection.get_response())
+        return make_response(group_collection.get_response(params))
 
     def post(self, body):
         validate_session(request)

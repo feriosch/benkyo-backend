@@ -1,4 +1,4 @@
-def _format_one(collection):
+def format_one(collection):
     return {
         'id': str(collection['_id']),
         'printing_name': collection['printing_name'],
@@ -11,7 +11,7 @@ def _format_one(collection):
 def format_all(collections):
     result = []
     for collection in collections:
-        result.append(_format_one(collection))
+        result.append(format_one(collection))
     return result
 
 

@@ -26,7 +26,8 @@ login_schema = Schema({
 })
 
 group_collections_schema = Schema({
-    Optional('group'): Use(str, error='group parameter error')
+    Optional('group'): Use(str, error='group parameter error'),
+    Optional('name'): Use(str, error='name parameter error')
 })
 
 group_collections_schema_post = Schema({
