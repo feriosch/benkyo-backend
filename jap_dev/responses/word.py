@@ -131,8 +131,8 @@ def csv_response(collection):
     df = DataFrame.from_dict(queries.get_words_for_csv(collection))
     if not df.empty:
         if collection:
-            df.to_csv(f'./{collection}.csv', index=False, header=False)
+            df.to_csv(f'./files/{collection}.csv', index=False, header=False)
         else:
-            df.to_csv('./benkyo.csv', index=False, header=False)
-        return {'message': f'Success. Saved as {collection}.csv'}, 200
-    return {'error': 'CSV error'}, 400
+            df.to_csv('./files/benkyo.csv', index=False, header=False)
+        return True
+    return False

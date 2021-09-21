@@ -1,5 +1,5 @@
 from flask.views import MethodView
-from flask import make_response, request
+from flask import make_response, request, send_from_directory
 
 from jap_dev.helpers.validation import validate_schema
 from jap_dev.helpers.authentication import validate_session
@@ -59,6 +59,14 @@ class CSV (MethodView):
     def get(self, params):
         validate_session(request)
         if 'from' in params:
-            return make_response(word.csv_response(params['from']))
+            collection = params['from']
+            csv_response = word.csv_response(collection)
+            if csv_response:
+                return send_from_directory('files', f'{collection}.csv', as_attachment=True)
+            else:
+                return {'error': 'Error processing CSV file.'}, 500
         else:
-            return make_response(word.csv_response(None))
+            csv_response = word.csv_response(None)
+            if csv_response:
+                return send_from_directory('files', 'benkyo.csv', as_attachment=True)
+            return {'error': 'Error processing CSV file.'}, 500
