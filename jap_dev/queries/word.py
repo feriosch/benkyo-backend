@@ -100,6 +100,10 @@ def update_word(word_id, info):
     return False
 
 
+def delete_word(word_id):
+    return words().delete_one({'_id': ObjectId(word_id)})
+
+
 def update_word_level(word_id, success):
     word = words().find_one({'_id': ObjectId(word_id)})
     if word:

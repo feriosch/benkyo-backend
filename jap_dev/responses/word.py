@@ -114,9 +114,11 @@ def search_many_response(word):
 
 def update_word_response(params):
     word_id = params['word_id']
+    if not ObjectId.is_valid(word_id):
+        return {'error': 'Invalid ID'}, 400
     if 'from' in params:
         if not queries.check_if_collection_exists(params['from']):
-            return {'error': 'Collection not found'}, 400
+            return {'error': 'Collection not found'}, 404
     formatted_word = formatter.format_word_update(params)
     if queries.update_word(word_id, formatted_word):
         return {'id': word_id}, 200
@@ -128,6 +130,16 @@ def update_level_response(word_id, success):
     if queries.update_word_level(word_id, bool_success):
         return {'id': word_id}, 200
     return {'error': 'No matched word'}, 400
+
+
+def delete_word_response(params):
+    word_id = params['word_id']
+    if not ObjectId.is_valid(word_id):
+        return {'error': 'Invalid ID'}, 400
+    query = queries.delete_word(word_id)
+    if query.deleted_count > 0:
+        return {'id': word_id}, 200
+    return {'error': 'Word not found'}, 404
 
 
 def csv_response(collection):

@@ -103,7 +103,7 @@ application.add_url_rule(
 application.add_url_rule(
     '/words',
     view_func=words_view,
-    methods=['GET', 'POST', 'PUT']
+    methods=['GET', 'POST', 'PUT', 'DELETE']
 )
 
 application.add_url_rule(

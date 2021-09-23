@@ -101,6 +101,10 @@ word_schema_put = Schema({
     Optional('notes'): Use(str, error='notes error')
 })
 
+word_schema_delete = Schema({
+    'word_id': Use(str, error='id error (required)')
+})
+
 search_word_schema = Schema({
     'word': Use(str, error='Word Is Missing')
 })

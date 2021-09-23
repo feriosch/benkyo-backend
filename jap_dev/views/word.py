@@ -21,6 +21,10 @@ class Word (MethodView):
         validate_session(request)
         return make_response(word.update_word_response(body))
 
+    def delete(self, params):
+        validate_session(request)
+        return make_response(word.delete_word_response(params))
+
 
 class SearchOne (MethodView):
     decorators = [validate_schema('search_one_word_schema')]
