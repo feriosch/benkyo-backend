@@ -89,6 +89,7 @@ word_schema_post = Schema({
 
 word_schema_put = Schema({
     'word_id': Use(str, error='id error (required)'),
+    Optional('from'): Use(str, error='collection error'),
     Optional('spanish'): Use(str, error='spanish error'),
     Optional('hiragana'): Use(str, error='hiragana error'),
     Optional('word_type'): word_type_schema,

@@ -112,9 +112,12 @@ def search_many_response(word):
     return jsonify(formatter.format_all_words(result))
 
 
-def update_word_response(word_info):
-    word_id = word_info['word_id']
-    formatted_word = formatter.format_word_update(word_info)
+def update_word_response(params):
+    word_id = params['word_id']
+    if 'from' in params:
+        if not queries.check_if_collection_exists(params['from']):
+            return {'error': 'Collection not found'}, 400
+    formatted_word = formatter.format_word_update(params)
     if queries.update_word(word_id, formatted_word):
         return {'id': word_id}, 200
     return {'error': 'No matched word'}, 400
