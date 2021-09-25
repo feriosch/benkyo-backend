@@ -169,6 +169,7 @@ kanji_components_schema = Schema({
     Optional('limit'): And(Use(int), lambda x: 0 < x < 50, error='limit error'),
 })
 
-search_one_kanji_schema = Schema({
-    Optional('kanji_id'): Use(str, error='kanji id error')
-})
+search_one_kanji_schema = Or(
+    Schema({'kanji_id': Use(str, error='kanji id error')}),
+    Schema({Optional('kanji'): And(Use(str), lambda x: len(x) == 1, error='kanji error')}),
+)

@@ -42,6 +42,13 @@ def get_one_by_id_response(kanji_id):
     return jsonify(formatter.format_kanji(result))
 
 
+def get_one_by_kanji(kanji):
+    result = queries.get_one_by_kanji(kanji)
+    if result is None:
+        return {'error': 'No matched kanji'}, 400
+    return jsonify(formatter.format_kanji(result))
+
+
 def check_if_v1_exists_response(v1):
     return jsonify(queries.check_if_v1_exists(v1))
 

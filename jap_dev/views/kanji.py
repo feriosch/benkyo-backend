@@ -29,6 +29,8 @@ class SearchOne(MethodView):
         validate_session(request)
         if 'kanji_id' in params:
             return make_response(kanji.get_one_by_id_response(params['kanji_id']))
+        elif 'kanji' in params:
+            return make_response(kanji.get_one_by_kanji(params['kanji']))
         return make_response(kanji.get_one_random_response())
 
 
