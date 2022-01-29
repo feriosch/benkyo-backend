@@ -5,9 +5,16 @@ from jap_dev.formatters import group_collection as formatter
 from jap_dev.formatters import id_formatter
 
 
-def get_response():
-    result = queries.get_all()
-    return jsonify(formatter.format_all(result))
+def get_response(params):
+    if 'name' in params:
+        name = params['name']
+        result = queries.get_collection_by_name(name)
+        if result:
+            return jsonify(formatter.format_one(result))
+        return {'error': 'Collection not found'}, 404
+    else:
+        result = queries.get_all()
+        return jsonify(formatter.format_all(result))
 
 
 def create_response(collection):

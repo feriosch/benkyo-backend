@@ -3,7 +3,7 @@ from flask import (Flask, jsonify, make_response)
 from flask_cors import CORS
 
 from jap_dev.helpers.exceptions import BadRequestException, UnauthorizedException
-from jap_dev.views.user import User, Login
+from jap_dev.views.user import User, Login, Session
 from jap_dev.views.kanji import Kanji,\
     VerifyExistence as VerifyKanjiExistence,\
     Components as KanjiComponents,\
@@ -22,6 +22,7 @@ def status_check():
 
 user_view = User.as_view('user')
 login_view = Login.as_view('login')
+session_view = Session.as_view('session')
 kanji_view = Kanji.as_view('kanjis')
 verify_kanji_existence_view = VerifyKanjiExistence.as_view('exists')
 kanji_components_view = KanjiComponents.as_view('components')
@@ -43,6 +44,12 @@ application.add_url_rule(
     '/login',
     view_func=login_view,
     methods=['POST']
+)
+
+application.add_url_rule(
+    '/session',
+    view_func=session_view,
+    methods=['GET']
 )
 
 application.add_url_rule(
@@ -70,7 +77,7 @@ application.add_url_rule(
 )
 
 application.add_url_rule(
-    '/groupcollections',
+    '/collections',
     view_func=group_collection_view,
     methods=['GET', 'POST']
 )
@@ -96,7 +103,7 @@ application.add_url_rule(
 application.add_url_rule(
     '/words',
     view_func=words_view,
-    methods=['GET', 'POST', 'PUT']
+    methods=['GET', 'POST', 'PUT', 'DELETE']
 )
 
 application.add_url_rule(

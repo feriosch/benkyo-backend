@@ -26,7 +26,8 @@ login_schema = Schema({
 })
 
 group_collections_schema = Schema({
-    Optional('group'): Use(str, error='group parameter error')
+    Optional('group'): Use(str, error='group parameter error'),
+    Optional('name'): Use(str, error='name parameter error')
 })
 
 group_collections_schema_post = Schema({
@@ -63,7 +64,12 @@ word_tags_schema = Schema({
 })
 
 word_schema = Schema({
-    Optional('from'): Use(str, error='from (collection) parameter invalid')
+    Optional('from'): Use(str),
+    Optional('filter_by'): Use(str),
+    Optional('order_field'): Use(str),
+    Optional('order_direction'): Use(str),
+    Optional('page_size'): Use(int),
+    Optional('page_number'): Use(int)
 })
 
 word_schema_post = Schema({
@@ -83,6 +89,7 @@ word_schema_post = Schema({
 
 word_schema_put = Schema({
     'word_id': Use(str, error='id error (required)'),
+    Optional('from'): Use(str, error='collection error'),
     Optional('spanish'): Use(str, error='spanish error'),
     Optional('hiragana'): Use(str, error='hiragana error'),
     Optional('word_type'): word_type_schema,
@@ -92,6 +99,10 @@ word_schema_put = Schema({
         'translation': Use(str, error='sentences.translation error')
     }]),
     Optional('notes'): Use(str, error='notes error')
+})
+
+word_schema_delete = Schema({
+    'word_id': Use(str, error='id error (required)')
 })
 
 search_word_schema = Schema({
@@ -158,6 +169,7 @@ kanji_components_schema = Schema({
     Optional('limit'): And(Use(int), lambda x: 0 < x < 50, error='limit error'),
 })
 
-search_one_kanji_schema = Schema({
-    Optional('kanji_id'): Use(str, error='kanji id error')
-})
+search_one_kanji_schema = Or(
+    Schema({'kanji_id': Use(str, error='kanji id error')}),
+    Schema({Optional('kanji'): And(Use(str), lambda x: len(x) == 1, error='kanji error')}),
+)

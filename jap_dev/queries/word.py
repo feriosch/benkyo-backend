@@ -1,3 +1,5 @@
+import math
+
 from bson.objectid import ObjectId
 
 from jap_dev.information import words
@@ -7,12 +9,51 @@ def get_all():
     return words().find()
 
 
-def get_words_from(collection):
-    return words().find({'from': collection})
+def get_words(collection, filter_by, order_field, order_direction, page_size, page_number):
+    pipeline = []
+    if collection:
+        pipeline.append({'$match': {'from': collection}})
+    if filter_by:
+        pipeline.append({
+            '$match': {
+                '$or': [
+                    {'word': {'$regex': '^' + filter_by}},
+                    {'hiragana': {'$regex': '^' + filter_by}},
+                    {'spanish': {
+                        '$regex': filter_by,
+                        '$options': 'i'
+                    }}
+                ]
+            }
+        })
+    if order_field:
+        pipeline.append({'$sort': {order_field: order_direction}})
+    word_count = len(list(words().aggregate(pipeline)))
+    if page_size:
+        skips = page_size * (page_number - 1)
+        pipeline.append({'$skip': skips})
+        pipeline.append({'$limit': page_size})
+    return words().aggregate(pipeline), word_count
 
 
-def check_if_exists(word):
+def get_pagination_details(total_word_count, result_size, page_size, page_number):
+    total_page_count = 1
+    if not page_size:
+        return total_page_count, ''
+    skips = page_size * (page_number - 1)
+    total_page_count = math.ceil(total_word_count / page_size)
+    if skips + result_size < total_word_count:
+        return total_page_count, str(page_number + 1)
+    else:
+        return total_page_count, ''
+
+
+def check_if_word_exists(word):
     return words().find({'word': word}).count() > 0
+
+
+def check_if_collection_exists(collection):
+    return collection in words().distinct('from')
 
 
 def insert(word):
@@ -57,6 +98,10 @@ def update_word(word_id, info):
         words().update_one({'_id': ObjectId(word_id)}, {'$set': info})
         return True
     return False
+
+
+def delete_word(word_id):
+    return words().delete_one({'_id': ObjectId(word_id)})
 
 
 def update_word_level(word_id, success):

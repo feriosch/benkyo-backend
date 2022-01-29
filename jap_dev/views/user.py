@@ -1,7 +1,8 @@
-from flask import make_response
+from flask import make_response, request
 from flask.views import MethodView
 
 from jap_dev.helpers.validation import validate_schema
+from jap_dev.helpers.authentication import validate_session
 from jap_dev.responses import user
 
 
@@ -20,3 +21,10 @@ class Login(MethodView):
 
     def post(self, body):
         return make_response(user.login_response(body))
+
+
+class Session(MethodView):
+
+    def get(self):
+        validate_session(request)
+        return make_response({'message': 'Valid session'}, 200)

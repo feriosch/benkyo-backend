@@ -43,5 +43,5 @@ def format_token_claims(user, expiration_date):
 
 
 def format_login_response(user, token):
-    user['jwt'] = token
+    user['token'] = token
     return user

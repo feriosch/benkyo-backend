@@ -9,7 +9,7 @@ def validate_schema(schema):
         @wraps(func)
         def wrapped(*args, **kwargs):
             try:
-                if request.method == 'GET':
+                if request.method == 'GET' or request.method == 'DELETE':
                     params = request.args.to_dict(flat=True)
                     schema_fac = SchemaFactory(schema, request.method)
                     schema_fac.load_schema().validate(params)
@@ -20,8 +20,6 @@ def validate_schema(schema):
                     schema_fac.load_schema().validate(body)
                     return func(body)
                 else:
-                    print(request.method)
-                    print(type(request.method))
                     raise SchemaError('Method not supported.')
             except SchemaError as error:
                 return make_response(
