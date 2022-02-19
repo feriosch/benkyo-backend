@@ -49,7 +49,7 @@ def get_pagination_details(total_word_count, result_size, page_size, page_number
 
 
 def check_if_word_exists(word):
-    return words().find({'word': word}).count() > 0
+    return words().count_documents({'word': word}) > 0
 
 
 def check_if_collection_exists(collection):

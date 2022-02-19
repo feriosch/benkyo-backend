@@ -43,6 +43,6 @@ def login_response(user):
     token = generate_token(formatter.format_token_claims(
         user_info,
         (datetime.utcnow() + timedelta(hours=12))
-    )).decode('utf-8')
+    ))
     # Return user info along with JWT
     return jsonify(formatter.format_login_response(user_info, token))

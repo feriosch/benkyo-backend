@@ -10,7 +10,7 @@ def validate_schema(schema):
         def wrapped(*args, **kwargs):
             try:
                 if request.method == 'GET' or request.method == 'DELETE':
-                    params = request.args.to_dict(flat=True)
+                    params = request.args.to_dict()
                     schema_fac = SchemaFactory(schema, request.method)
                     schema_fac.load_schema().validate(params)
                     return func(params)

@@ -1,6 +1,6 @@
 class GeneralException(Exception):
-    def __init__(self, messsage, code):
-        self._message = messsage
+    def __init__(self, message, code):
+        self._message = message
         self._code = code
 
     @property
