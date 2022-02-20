@@ -11,7 +11,7 @@ class Kanji (MethodView):
 
     def get(self, params):
         validate_session(request)
-        return make_response(kanji.get_with_components_response(params))
+        return make_response(kanji.get_kanjis_response(params))
 
     def post(self, body):
         validate_session(request)

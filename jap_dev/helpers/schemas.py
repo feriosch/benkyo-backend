@@ -122,12 +122,17 @@ update_word_level_schema = Schema({
 })
 
 kanji_schema = Schema({
-    Optional('component_1'): Use(str, error='component_1 error'),
-    Optional('component_2'): Use(str, error='component_2 error'),
-    Optional('component_3'): Use(str, error='component_3 error'),
-    Optional('component_4'): Use(str, error='component_4 error'),
-    Optional('component_5'): Use(str, error='component_5 error'),
-    Optional('component_6'): Use(str, error='component_6 error'),
+    Optional('c1'): Use(str, error='Component 1 error'),
+    Optional('c2'): Use(str, error='Component 2 error'),
+    Optional('c3'): Use(str, error='Component 3 error'),
+    Optional('c4'): Use(str, error='Component 4 error'),
+    Optional('c5'): Use(str, error='Component 5 error'),
+    Optional('c6'): Use(str, error='Component 6 error'),
+    Optional('filter_by'): Use(str, error='Filter error'),
+    Optional('order_field'): Use(str, error='Order field error'),
+    Optional('order_direction'): Use(str, error='Order direction error'),
+    Optional('page_size'): Use(int, error='Page size error'),
+    Optional('page_number'): Use(int, 'Page number error')
 })
 
 kanji_schema_post = Schema({
