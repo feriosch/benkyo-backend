@@ -121,6 +121,10 @@ update_word_level_schema = Schema({
     'success': Use(int, error='Success is missing')
 })
 
+word_csv_schema = Schema({
+    Optional('from'): Use(str, error='Collection error')
+})
+
 kanji_schema = Schema({
     Optional('c1'): Use(str, error='Component 1 error'),
     Optional('c2'): Use(str, error='Component 2 error'),

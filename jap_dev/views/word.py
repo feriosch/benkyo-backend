@@ -58,7 +58,7 @@ class UpdateLevel (MethodView):
 
 
 class CSV (MethodView):
-    decorators = [validate_schema('word_schema')]
+    decorators = [validate_schema('word_csv_schema')]
 
     def get(self, params):
         validate_session(request)
