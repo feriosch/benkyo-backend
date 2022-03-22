@@ -144,7 +144,7 @@ def delete_word_response(params):
 
 def csv_response(collection):
     df = DataFrame.from_dict(queries.get_words_for_csv(collection))
-    df = df.reindex(columns=['word', 'hiragana', 'spanish'])
+    df = df.reindex(columns=['word', 'hiragana', 'spanish', 'sentence', 'translation'])
     if not df.empty:
         if collection:
             df.to_csv(f'./files/{collection}.csv', index=False, header=False)

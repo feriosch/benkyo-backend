@@ -118,7 +118,17 @@ def update_word_level(word_id, success):
 
 
 def get_words_for_csv(collection=None):
+    pipeline = []
     if collection:
-        return words().find({'from': collection}, {'_id': 0, 'word': 1, 'hiragana': 1, 'spanish': 1})
-    else:
-        return words().find({}, {'_id': 0, 'word': 1, 'hiragana': 1, 'spanish': 1})
+        pipeline.append({'$match': {'from': collection}})
+    pipeline.append({
+        '$project': {
+            '_id': 0,
+            'word': 1,
+            'hiragana': 1,
+            'spanish': 1,
+            'sentence': {'$first': '$sentences.sentence'},
+            'translation': {'$first': '$sentences.translation'}
+        }
+    })
+    return words().aggregate(pipeline)
