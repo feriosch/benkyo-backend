@@ -1,0 +1,37 @@
+from jap_dev.views.kanji.main import MainKanjiView
+from jap_dev.views.kanji.search_one import SearchOneKanjiView
+from jap_dev.views.kanji.verify_existence import VerifyKanjiExistenceView
+from jap_dev.views.kanji.components import KanjiComponentsView
+from jap_dev.views.word.main import MainWordView
+from jap_dev.views.word.search_one import SearchOneWordView
+from jap_dev.views.word.search_many import SearchManyWordsView
+from jap_dev.views.word.update_level import UpdateWordLevelView
+from jap_dev.views.word.csv import WordCsvView
+from jap_dev.views.collection.main import MainCollectionView
+from jap_dev.views.user.main import MainUserView
+from jap_dev.views.user.login import UserLoginView
+from jap_dev.views.user.session import UserSessionView
+
+views = {
+    'kanji': {
+        'main': MainKanjiView.as_view('kanji'),
+        'search_one': SearchOneKanjiView.as_view('kanji_search_one'),
+        'verify_existence': VerifyKanjiExistenceView.as_view('kanji_verify_existence'),
+        'components': KanjiComponentsView.as_view('kanji_components')
+    },
+    'word': {
+        'main': MainWordView.as_view('word'),
+        'search_one': SearchOneWordView.as_view('word_search_one'),
+        'search_many': SearchManyWordsView.as_view('word_search_many'),
+        'update_level': UpdateWordLevelView.as_view('word_update_level'),
+        'csv': WordCsvView.as_view('word_csv')
+    },
+    'collection': {
+        'main': MainCollectionView.as_view('collection')
+    },
+    'user': {
+        'main': MainUserView.as_view('user'),
+        'login': UserLoginView.as_view('user_login'),
+        'session': UserSessionView.as_view('user_session')
+    }
+}

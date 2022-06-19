@@ -3,13 +3,8 @@ from flask import (Flask, jsonify, make_response)
 from flask_cors import CORS
 
 from jap_dev.helpers.exceptions import BadRequestException, UnauthorizedException
-from jap_dev.views.user import User, Login, Session
-from jap_dev.views.kanji import Kanji,\
-    VerifyExistence as VerifyKanjiExistence,\
-    Components as KanjiComponents,\
-    SearchOne as KanjiSearchOne
-from jap_dev.views.group_collection import GroupCollection
-from jap_dev.views.word import Word, SearchOne, SearchMany, UpdateLevel, CSV
+from jap_dev.views.views import views
+
 
 application = Flask(__name__)
 CORS(application)
@@ -20,97 +15,30 @@ def status_check():
     return jsonify({'status': 'ok'})
 
 
-user_view = User.as_view('user')
-login_view = Login.as_view('login')
-session_view = Session.as_view('session')
-kanji_view = Kanji.as_view('kanjis')
-verify_kanji_existence_view = VerifyKanjiExistence.as_view('exists')
-kanji_components_view = KanjiComponents.as_view('components')
-kanji_search_one_view = KanjiSearchOne.as_view('kanjisearchone')
-group_collection_view = GroupCollection.as_view('groupcollection')
-search_one_view = SearchOne.as_view('searchone')
-search_many_view = SearchMany.as_view('searchmany')
-update_word_level_view = UpdateLevel.as_view('updatewordlevel')
-words_view = Word.as_view('words')
-csv_view = CSV.as_view('csv')
+def add_rule(route, view, methods):
+    application.add_url_rule(
+        route,
+        view_func=view,
+        methods=methods
+    )
 
-application.add_url_rule(
-    '/users',
-    view_func=user_view,
-    methods=['GET', 'POST']
-)
 
-application.add_url_rule(
-    '/login',
-    view_func=login_view,
-    methods=['POST']
-)
+add_rule('/users', views['user']['main'], ['GET', 'POST'])
+add_rule('/login', views['user']['login'], ['POST'])
+add_rule('/session', views['user']['session'], ['GET'])
 
-application.add_url_rule(
-    '/session',
-    view_func=session_view,
-    methods=['GET']
-)
+add_rule('/kanjis', views['kanji']['main'], ['GET', 'POST', 'PUT'])
+add_rule('/kanjis/searchone', views['kanji']['search_one'], ['GET'])
+add_rule('/kanjis/exists', views['kanji']['verify_existence'], ['GET'])
+add_rule('/kanjis/components', views['kanji']['components'], ['GET'])
 
-application.add_url_rule(
-    '/kanjis',
-    view_func=kanji_view,
-    methods=['GET', 'POST', 'PUT']
-)
+add_rule('/collections', views['collection']['main'], ['GET', 'POST'])
 
-application.add_url_rule(
-    '/kanjis/exists',
-    view_func=verify_kanji_existence_view,
-    methods=['GET']
-)
-
-application.add_url_rule(
-    '/kanjis/components',
-    view_func=kanji_components_view,
-    methods=['GET']
-)
-
-application.add_url_rule(
-    '/kanjis/searchone',
-    view_func=kanji_search_one_view,
-    methods=['GET']
-)
-
-application.add_url_rule(
-    '/collections',
-    view_func=group_collection_view,
-    methods=['GET', 'POST']
-)
-
-application.add_url_rule(
-    '/searchone',
-    view_func=search_one_view,
-    methods=['GET']
-)
-
-application.add_url_rule(
-    '/searchmany',
-    view_func=search_many_view,
-    methods=['GET']
-)
-
-application.add_url_rule(
-    '/updatewordlevel',
-    view_func=update_word_level_view,
-    methods=['PUT']
-)
-
-application.add_url_rule(
-    '/words',
-    view_func=words_view,
-    methods=['GET', 'POST', 'PUT', 'DELETE']
-)
-
-application.add_url_rule(
-    '/words/csv',
-    view_func=csv_view,
-    methods=['GET']
-)
+add_rule('/words', views['word']['main'], ['GET', 'POST', 'PUT', 'DELETE'])
+add_rule('/searchone', views['word']['search_one'], ['GET'])
+add_rule('/searchmany', views['word']['search_many'], ['GET'])
+add_rule('/updatewordlevel', views['word']['update_level'], ['PUT'])
+add_rule('/words/csv', views['word']['csv'], ['GET'])
 
 
 @application.errorhandler(BadRequestException)
@@ -127,5 +55,5 @@ if __name__ == '__main__':
     try:
         port = os.getenv('PORT')
     except NameError:
-        port = 5000
+        port = 80
     application.run(host='0.0.0.0', port=port)
