@@ -5,6 +5,10 @@ def get_all():
     return group_collections().find()
 
 
+def get_collection_by_name(name):
+    return group_collections().find_one({'collection_name': name})
+
+
 def check_if_exists(name):
     return group_collections().find({'collection_name': name}).count() > 0
 

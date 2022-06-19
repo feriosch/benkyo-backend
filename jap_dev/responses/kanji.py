@@ -6,24 +6,71 @@ from jap_dev.formatters import kanji as formatter
 from jap_dev.formatters import id_formatter
 
 
-def get_with_components_response(parameters):
+def get_kanjis_response(params):
+    filter_by = None
+    order_field = None
+    order_direction = None
+    page_size = None
+    page_number = None
     components = []
-    if 'component_1' in parameters:
-        components.append(parameters['component_1'])
-    if 'component_2' in parameters:
-        components.append(parameters['component_2'])
-    if 'component_3' in parameters:
-        components.append(parameters['component_3'])
-    if 'component_4' in parameters:
-        components.append(parameters['component_4'])
-    if 'component_5' in parameters:
-        components.append(parameters['component_5'])
-    if components:
-        result = queries.get_from_components(components)
-        return jsonify(formatter.format_all_summarized_kanjis(result))
-    else:
-        result = queries.get_all()
-        return jsonify(formatter.format_all_kanjis(result))
+    if 'c1' in params:
+        components.append(params['c1'])
+    if 'c2' in params:
+        components.append(params['c2'])
+    if 'c3' in params:
+        components.append(params['c3'])
+    if 'c4' in params:
+        components.append(params['c4'])
+    if 'c5' in params:
+        components.append(params['c5'])
+    if 'c6' in params:
+        components.append(params['c6'])
+    if 'filter_by' in params:
+        filter_by = params['filter_by']
+    if 'order_field' in params:
+        order_field = params['order_field']
+        if 'order_direction' in params:
+            if params['order_direction'] == 'ASC':
+                order_direction = 1
+            elif params['order_direction'] == 'DESC':
+                order_direction = -1
+            else:
+                return {'error': 'Order field must be ASC or DESC'}, 400
+        else:
+            order_direction = 1
+    if 'page_size' in params:
+        page_size = int(params['page_size'])
+        if page_size < 1 or page_size > 1000:
+            return {'error': 'Page size out of boundaries'}, 400
+        if 'page_number' in params:
+            page_number = int(params['page_number'])
+            if page_number < 1:
+                return {'error': 'Page number out of boundaries'}, 400
+        else:
+            page_number = 1
+
+    kanjis, kanji_count = queries.get_kanjis(
+        components=components,
+        filter_by=filter_by,
+        order_field=order_field,
+        order_direction=order_direction,
+        page_size=page_size,
+        page_number=page_number
+    )
+    formatted_kanjis = formatter.format_all_summarized_kanjis(kanjis)
+    page_count, next_page_number = queries.get_pagination_details(
+        kanji_count,
+        len(formatted_kanjis),
+        page_size,
+        page_number
+    )
+
+    return {
+        'kanjis': formatted_kanjis,
+        'next_page_number': next_page_number,
+        'total_pages': page_count,
+        'total_kanjis': kanji_count
+    }
 
 
 def get_one_random_response():
@@ -37,6 +84,13 @@ def get_one_by_id_response(kanji_id):
     if not ObjectId.is_valid(kanji_id):
         return {'error': 'Invalid ID'}, 400
     result = queries.get_one_by_id(kanji_id)
+    if result is None:
+        return {'error': 'No matched kanji'}, 400
+    return jsonify(formatter.format_kanji(result))
+
+
+def get_one_by_kanji(kanji):
+    result = queries.get_one_by_kanji(kanji)
     if result is None:
         return {'error': 'No matched kanji'}, 400
     return jsonify(formatter.format_kanji(result))

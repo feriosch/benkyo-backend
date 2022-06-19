@@ -4,6 +4,7 @@
 *.csv
 
 .env
+.env.dev
 
 debug.py
 component_dictionary.py

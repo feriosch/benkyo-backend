@@ -61,6 +61,8 @@ def format_word_insertion(word_info):
 
 def format_word_update(word_info):
     formatted_info = dict()
+    if 'from' in word_info:
+        formatted_info['from'] = word_info['from']
     if 'spanish' in word_info:
         formatted_info['spanish'] = word_info['spanish']
     if 'hiragana' in word_info:

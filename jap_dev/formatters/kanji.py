@@ -33,11 +33,19 @@ def format_kanji(kanji):
 
 
 def format_summarized_kanji(kanji):
-    return {
+    formatted_kanji = {
         'id': str(kanji['_id']),
+        'v1': int(kanji['v1']),
         'kanji': kanji['kanji'],
         'spanish': kanji['spanish']
     }
+    if 'v2' in kanji:
+        formatted_kanji['v2'] = int(kanji['v2'])
+    if 'on' in kanji:
+        formatted_kanji['on'] = kanji['on']
+    if 'kun' in kanji:
+        formatted_kanji['kun'] = kanji['kun']
+    return formatted_kanji
 
 
 def format_all_kanjis(kanjis):

@@ -1,3 +1,5 @@
+import math
+
 from bson.objectid import ObjectId
 
 from jap_dev.information import kanjis, kanji_irregular_components
@@ -7,12 +9,58 @@ def get_all():
     return kanjis().find().sort('v1')
 
 
+def get_kanjis(components, filter_by, order_field, order_direction, page_size, page_number):
+    pipeline = []
+    if components:
+        pipeline.append({
+            '$match': {'components': {'$all': components}}
+        })
+    if filter_by:
+        pipeline.append({
+            '$match': {
+                '$or': [
+                    {'kanji': {'$regex': '^' + filter_by}},
+                    {'on': {'$regex': '^' + filter_by}},
+                    {'kun': {'$regex': '^' + filter_by}},
+                    {'spanish': {
+                        '$regex': filter_by,
+                        '$options': 'i'
+                    }}
+                ]
+            }
+        })
+    if order_field:
+        pipeline.append({'$sort': {order_field: order_direction}})
+    kanji_count = len(list(kanjis().aggregate(pipeline)))
+    if page_size:
+        skips = page_size * (page_number - 1)
+        pipeline.append({'$skip': skips})
+        pipeline.append({'$limit': page_size})
+    return kanjis().aggregate(pipeline), kanji_count
+
+
+def get_pagination_details(total_kanji_count, result_size, page_size, page_number):
+    total_page_count = 1
+    if not page_size:
+        return total_page_count, ''
+    skips = page_size * (page_number - 1)
+    total_page_count = math.ceil(total_kanji_count / page_size)
+    if skips + result_size < total_kanji_count:
+        return total_page_count, str(page_number + 1)
+    else:
+        return total_page_count, ''
+
+
 def get_from_components(components):
     return kanjis().find({'components': {'$all': components}}).sort('v1')
 
 
 def get_one_by_id(kanji_id):
     return kanjis().find_one({'_id': ObjectId(kanji_id)})
+
+
+def get_one_by_kanji(kanji):
+    return kanjis().find_one({'kanji': kanji})
 
 
 def get_one_random():
