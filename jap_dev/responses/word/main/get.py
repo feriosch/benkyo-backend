@@ -2,7 +2,7 @@ import math
 
 from jap_dev.queries.word.verify import check_if_collection_exists
 from jap_dev.queries.word.main import get_words
-from jap_dev.formatters import word as formatter
+from jap_dev.formatters.word.main import format_all_words
 
 
 def get_pagination_details(total_word_count, result_size, page_size, page_number):
@@ -62,7 +62,7 @@ def get_words_response(params):
         page_size=page_size,
         page_number=page_number
     )
-    formatted_words = formatter.format_all_words(words)
+    formatted_words = format_all_words(words)
     page_count, next_page_number = get_pagination_details(
         word_count,
         len(formatted_words),

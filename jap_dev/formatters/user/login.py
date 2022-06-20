@@ -13,28 +13,6 @@ def _format_id_plug(user):
     return user
 
 
-def format_user(user):
-    return {
-        # 'id': user['_id'],
-        'username': user['username']
-    }
-
-
-def format_all_users(users):
-    result = []
-    for user in users:
-        result.append(format_user(user))
-    return result
-
-
-def format_user_insertion(user, password):
-    return {
-        'username': user['username'],
-        'password': password,
-        'type': user['type']
-    }
-
-
 def format_token_claims(user, expiration_date):
     cleaned_user = _clean_password(user)
     cleaned_user = _format_id_plug(cleaned_user)

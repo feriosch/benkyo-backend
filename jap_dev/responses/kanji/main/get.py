@@ -1,7 +1,7 @@
 import math
 
 from jap_dev.queries.kanji.main import get_kanji
-from jap_dev.formatters import kanji as formatter
+from jap_dev.formatters.kanji.summarized import format_all_summarized_kanjis
 
 
 def get_pagination_details(total_kanji_count, result_size, page_size, page_number):
@@ -67,7 +67,7 @@ def get_kanji_response(params):
         page_size=page_size,
         page_number=page_number
     )
-    formatted_kanjis = formatter.format_all_summarized_kanjis(kanjis)
+    formatted_kanjis = format_all_summarized_kanjis(kanjis)
     page_count, next_page_number = get_pagination_details(
         kanji_count,
         len(formatted_kanjis),
