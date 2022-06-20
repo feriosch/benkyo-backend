@@ -1,5 +1,20 @@
-from jap_dev.queries import word as queries
+import math
+
+from jap_dev.queries.word.verify import check_if_collection_exists
+from jap_dev.queries.word.main import get_words
 from jap_dev.formatters import word as formatter
+
+
+def get_pagination_details(total_word_count, result_size, page_size, page_number):
+    total_page_count = 1
+    if not page_size:
+        return total_page_count, ''
+    skips = page_size * (page_number - 1)
+    total_page_count = math.ceil(total_word_count / page_size)
+    if skips + result_size < total_word_count:
+        return total_page_count, str(page_number + 1)
+    else:
+        return total_page_count, ''
 
 
 def get_words_response(params):
@@ -12,7 +27,8 @@ def get_words_response(params):
 
     if 'from' in params and params['from'] != 'all':
         collection = params['from']
-        if not queries.check_if_collection_exists(collection):
+        # TODO: Check this out
+        if not check_if_collection_exists(collection):
             return {'error': 'Collection not found'}, 400
     if 'filter_by' in params:
         filter_by = params['filter_by']
@@ -38,7 +54,7 @@ def get_words_response(params):
         else:
             page_number = 1
 
-    words, word_count = queries.get_words(
+    words, word_count = get_words(
         collection=collection,
         filter_by=filter_by,
         order_field=order_field,
@@ -47,7 +63,7 @@ def get_words_response(params):
         page_number=page_number
     )
     formatted_words = formatter.format_all_words(words)
-    page_count, next_page_number = queries.get_pagination_details(
+    page_count, next_page_number = get_pagination_details(
         word_count,
         len(formatted_words),
         page_size,

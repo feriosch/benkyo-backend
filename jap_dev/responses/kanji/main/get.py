@@ -1,5 +1,19 @@
-from jap_dev.queries import kanji as queries
+import math
+
+from jap_dev.queries.kanji.main import get_kanji
 from jap_dev.formatters import kanji as formatter
+
+
+def get_pagination_details(total_kanji_count, result_size, page_size, page_number):
+    total_page_count = 1
+    if not page_size:
+        return total_page_count, ''
+    skips = page_size * (page_number - 1)
+    total_page_count = math.ceil(total_kanji_count / page_size)
+    if skips + result_size < total_kanji_count:
+        return total_page_count, str(page_number + 1)
+    else:
+        return total_page_count, ''
 
 
 def get_kanji_response(params):
@@ -45,7 +59,7 @@ def get_kanji_response(params):
         else:
             page_number = 1
 
-    kanjis, kanji_count = queries.get_kanjis(
+    kanjis, kanji_count = get_kanji(
         components=components,
         filter_by=filter_by,
         order_field=order_field,
@@ -54,7 +68,7 @@ def get_kanji_response(params):
         page_number=page_number
     )
     formatted_kanjis = formatter.format_all_summarized_kanjis(kanjis)
-    page_count, next_page_number = queries.get_pagination_details(
+    page_count, next_page_number = get_pagination_details(
         kanji_count,
         len(formatted_kanjis),
         page_size,
@@ -67,4 +81,3 @@ def get_kanji_response(params):
         'total_pages': page_count,
         'total_kanjis': kanji_count
     }
-

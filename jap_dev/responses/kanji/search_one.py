@@ -1,7 +1,7 @@
 from flask import (jsonify)
 from bson.objectid import ObjectId
 
-from jap_dev.queries import kanji as queries
+import jap_dev.queries.kanji.search_one as queries
 from jap_dev.formatters import kanji as formatter
 
 

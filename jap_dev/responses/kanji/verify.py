@@ -1,6 +1,6 @@
 from flask import (jsonify)
 
-from jap_dev.queries import kanji as queries
+import jap_dev.queries.kanji.verify as queries
 
 
 def check_if_v1_exists_response(v1):

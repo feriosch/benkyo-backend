@@ -1,10 +1,10 @@
 from pandas import DataFrame
 
-from jap_dev.queries import word as queries
+from jap_dev.queries.word.csv import get_words_for_csv
 
 
 def get_words_csv_response(collection):
-    df = DataFrame.from_dict(queries.get_words_for_csv(collection))
+    df = DataFrame.from_dict(get_words_for_csv(collection))
     df = df.reindex(columns=['word', 'hiragana', 'spanish', 'sentence', 'translation'])
     if not df.empty:
         if collection:
