@@ -3,7 +3,7 @@ from flask import make_response, request
 
 from jap_dev.helpers.validation import validate_schema
 from jap_dev.helpers.authentication import validate_session
-from jap_dev.responses import word
+import jap_dev.responses.word.search_one as responses
 
 
 class SearchOneWordView(MethodView):
@@ -12,10 +12,10 @@ class SearchOneWordView(MethodView):
     def get(self, params):
         validate_session(request)
         if 'word' in params:
-            return make_response(word.search_one_by_word_response(params['word']))
+            return make_response(responses.get_one_by_word_response(params['word']))
         elif 'word_id' in params:
-            return make_response(word.search_one_by_id_response(params['word_id']))
+            return make_response(responses.get_one_by_id_response(params['word_id']))
         elif 'from' in params:
-            return make_response(word.search_one_random_by_collection_response(params['from']))
+            return make_response(responses.get_one_random_by_collection_response(params['from']))
         else:
-            return make_response(word.search_one_random_response())
+            return make_response(responses.get_one_random_response())

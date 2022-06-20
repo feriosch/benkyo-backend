@@ -3,7 +3,7 @@ from flask import request, make_response
 
 from jap_dev.helpers.validation import validate_schema
 from jap_dev.helpers.authentication import validate_session
-from jap_dev.responses import kanji
+import jap_dev.responses.kanji.search_one as responses
 
 
 class SearchOneKanjiView(MethodView):
@@ -12,7 +12,7 @@ class SearchOneKanjiView(MethodView):
     def get(self, params):
         validate_session(request)
         if 'kanji_id' in params:
-            return make_response(kanji.get_one_by_id_response(params['kanji_id']))
+            return make_response(responses.get_kanji_by_id_response(params['kanji_id']))
         elif 'kanji' in params:
-            return make_response(kanji.get_one_by_kanji(params['kanji']))
-        return make_response(kanji.get_one_random_response())
+            return make_response(responses.get_kanji_by_kanji_response(params['kanji']))
+        return make_response(responses.get_random_kanji_response())

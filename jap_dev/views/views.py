@@ -1,6 +1,6 @@
 from jap_dev.views.kanji.main import MainKanjiView
 from jap_dev.views.kanji.search_one import SearchOneKanjiView
-from jap_dev.views.kanji.verify_existence import VerifyKanjiExistenceView
+from jap_dev.views.kanji.verify import VerifyKanjiExistenceView
 from jap_dev.views.kanji.components import KanjiComponentsView
 from jap_dev.views.word.main import MainWordView
 from jap_dev.views.word.search_one import SearchOneWordView

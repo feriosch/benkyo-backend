@@ -3,7 +3,7 @@ from flask import request, make_response
 
 from jap_dev.helpers.validation import validate_schema
 from jap_dev.helpers.authentication import validate_session
-from jap_dev.responses import kanji
+import jap_dev.responses.kanji.components as responses
 
 
 class KanjiComponentsView (MethodView):
@@ -17,4 +17,4 @@ class KanjiComponentsView (MethodView):
             starting = params['starting']
         if 'limit' in params:
             limit = int(params['limit'])
-        return make_response(kanji.get_distinct_components_response(starting=starting, limit=limit))
+        return make_response(responses.get_distinct_components_response(starting=starting, limit=limit))

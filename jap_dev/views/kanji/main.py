@@ -3,7 +3,9 @@ from flask import request, make_response
 
 from jap_dev.helpers.validation import validate_schema
 from jap_dev.helpers.authentication import validate_session
-from jap_dev.responses import kanji
+from jap_dev.responses.kanji.main.get import get_kanji_response
+from jap_dev.responses.kanji.main.insert import insert_kanji_response
+from jap_dev.responses.kanji.main.update import update_kanji_response
 
 
 class MainKanjiView(MethodView):
@@ -11,12 +13,12 @@ class MainKanjiView(MethodView):
 
     def get(self, params):
         validate_session(request)
-        return make_response(kanji.get_kanjis_response(params))
+        return make_response(get_kanji_response(params))
 
     def post(self, body):
         validate_session(request)
-        return make_response(kanji.create_response(body))
+        return make_response(insert_kanji_response(body))
 
     def put(self, body):
         validate_session(request)
-        return make_response(kanji.update_response(body))
+        return make_response(update_kanji_response(body))
