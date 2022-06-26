@@ -1,16 +1,18 @@
 from flask.views import MethodView
-from flask import make_response, request
+from flask import make_response
 
-from jap_dev.helpers.validation import validate_schema
 from jap_dev.helpers.authentication import validate_session
+from jap_dev.schemas.validation import validate_schema, get_params
+from jap_dev.schemas.word.search import search_word_schema
 import jap_dev.responses.word.search as responses
 
 
 class WordSearchView(MethodView):
-    decorators = [validate_schema('search_one_word_schema')]
+    decorators = [validate_session]
 
-    def get(self, params):
-        validate_session(request)
+    @validate_schema(search_word_schema)
+    def get(self):
+        params = get_params()
         if 'word' in params:
             return make_response(responses.get_one_by_word_response(params['word']))
         elif 'word_id' in params:

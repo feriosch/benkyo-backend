@@ -1,16 +1,19 @@
 from flask.views import MethodView
-from flask import request, send_from_directory
+from flask import send_from_directory
 
-from jap_dev.helpers.validation import validate_schema
 from jap_dev.helpers.authentication import validate_session
+from jap_dev.schemas.validation import validate_schema, get_params
+from jap_dev.schemas.word.csv import word_csv_get_schema
 import jap_dev.responses.word.csv as responses
 
 
 class WordCsvView(MethodView):
-    decorators = [validate_schema('word_csv_schema')]
+    decorators = [validate_session]
 
-    def get(self, params):
-        validate_session(request)
+    # Todo: Evaluate if refactor to a response
+    @validate_schema(word_csv_get_schema)
+    def get(self):
+        params = get_params()
         if 'from' in params:
             collection = params['from']
             csv_response = responses.get_words_csv_response(collection)
