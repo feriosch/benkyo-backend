@@ -3,10 +3,10 @@ from flask import make_response, request
 
 from jap_dev.helpers.validation import validate_schema
 from jap_dev.helpers.authentication import validate_session
-import jap_dev.responses.word.search_one as responses
+import jap_dev.responses.word.search as responses
 
 
-class SearchOneWordView(MethodView):
+class SearchWordView(MethodView):
     decorators = [validate_schema('search_one_word_schema')]
 
     def get(self, params):
