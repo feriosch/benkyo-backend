@@ -1,4 +1,4 @@
-from jap_dev.queries.word.update_level import update_word_level
+from jap_dev.queries.word.level import update_word_level
 
 
 def update_level_response(word_id, success):

@@ -4,7 +4,7 @@ from jap_dev.views.kanji.verify import VerifyKanjiExistenceView
 from jap_dev.views.kanji.components import KanjiComponentsView
 from jap_dev.views.word.main import WordMainView
 from jap_dev.views.word.search import WordSearchView
-from jap_dev.views.word.update_level import UpdateWordLevelView
+from jap_dev.views.word.level import WordLevelView
 from jap_dev.views.word.csv import WordCsvView
 from jap_dev.views.collection.main import MainCollectionView
 from jap_dev.views.user.main import MainUserView
@@ -21,7 +21,7 @@ views = {
     'word': {
         'main': WordMainView.as_view('word'),
         'search': WordSearchView.as_view('word_search'),
-        'update_level': UpdateWordLevelView.as_view('word_update_level'),
+        'level': WordLevelView.as_view('word_level'),
         'csv': WordCsvView.as_view('word_csv')
     },
     'collection': {
