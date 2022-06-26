@@ -1,16 +1,18 @@
 from flask.views import MethodView
-from flask import request, make_response
+from flask import make_response
 
-from jap_dev.helpers.validation import validate_schema
 from jap_dev.helpers.authentication import validate_session
+from jap_dev.schemas.validation import validate_schema, get_params
+from jap_dev.schemas.kanji.components import kanji_components_schema
 import jap_dev.responses.kanji.components as responses
 
 
 class KanjiComponentsView (MethodView):
-    decorators = [validate_schema('kanji_components_schema')]
+    decorators = [validate_session]
 
-    def get(self, params):
-        validate_session(request)
+    @validate_schema(kanji_components_schema)
+    def get(self):
+        params = get_params()
         starting = None
         limit = None
         if 'starting' in params:

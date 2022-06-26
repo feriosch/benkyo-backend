@@ -1,16 +1,18 @@
 from flask.views import MethodView
-from flask import request, make_response
+from flask import make_response
 
-from jap_dev.helpers.validation import validate_schema
 from jap_dev.helpers.authentication import validate_session
+from jap_dev.schemas.validation import validate_schema, get_params
+from jap_dev.schemas.kanji.verify import kanji_exists_schema
 import jap_dev.responses.kanji.verify as responses
 
 
 class VerifyKanjiExistenceView(MethodView):
-    decorators = [validate_schema('exists_kanji_schema')]
+    decorators = [validate_session]
 
-    def get(self, params):
-        validate_session(request)
+    @validate_schema(kanji_exists_schema)
+    def get(self):
+        params = get_params()
         if 'v1' in params:
             return make_response(responses.check_if_v1_exists_response(int(params['v1'])))
         elif 'kanji' in params:
