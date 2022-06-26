@@ -7,7 +7,7 @@ from jap_dev.schemas.kanji.verify import kanji_exists_schema
 import jap_dev.responses.kanji.verify as responses
 
 
-class VerifyKanjiExistenceView(MethodView):
+class VerifyKanjiView(MethodView):
     decorators = [validate_session]
 
     @validate_schema(kanji_exists_schema)

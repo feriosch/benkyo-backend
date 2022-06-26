@@ -1,6 +1,6 @@
 from jap_dev.views.kanji.main import MainKanjiView
-from jap_dev.views.kanji.search_one import SearchOneKanjiView
-from jap_dev.views.kanji.verify import VerifyKanjiExistenceView
+from jap_dev.views.kanji.search import SearchKanjiView
+from jap_dev.views.kanji.verify import VerifyKanjiView
 from jap_dev.views.kanji.components import KanjiComponentsView
 from jap_dev.views.word.main import WordMainView
 from jap_dev.views.word.search import WordSearchView
@@ -14,8 +14,8 @@ from jap_dev.views.user.session import UserSessionView
 views = {
     'kanji': {
         'main': MainKanjiView.as_view('kanji'),
-        'search_one': SearchOneKanjiView.as_view('kanji_search_one'),
-        'verify_existence': VerifyKanjiExistenceView.as_view('kanji_verify_existence'),
+        'search': SearchKanjiView.as_view('kanji_search'),
+        'verify': VerifyKanjiView.as_view('kanji_verify'),
         'components': KanjiComponentsView.as_view('kanji_components')
     },
     'word': {

@@ -28,8 +28,8 @@ add_rule('/login', views['user']['login'], ['POST'])
 add_rule('/session', views['user']['session'], ['GET'])
 
 add_rule('/kanjis', views['kanji']['main'], ['GET', 'POST', 'PUT'])
-add_rule('/kanjis/searchone', views['kanji']['search_one'], ['GET'])
-add_rule('/kanjis/exists', views['kanji']['verify_existence'], ['GET'])
+add_rule('/kanjis/search', views['kanji']['search'], ['GET'])
+add_rule('/kanjis/exists', views['kanji']['verify'], ['GET'])
 add_rule('/kanjis/components', views['kanji']['components'], ['GET'])
 
 add_rule('/collections', views['collection']['main'], ['GET', 'POST'])

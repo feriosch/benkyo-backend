@@ -7,7 +7,7 @@ from jap_dev.schemas.kanji.search import kanji_search_one_schema
 import jap_dev.responses.kanji.search_one as responses
 
 
-class SearchOneKanjiView(MethodView):
+class SearchKanjiView(MethodView):
     decorators = [validate_session]
 
     @validate_schema(kanji_search_one_schema)
