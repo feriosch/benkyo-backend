@@ -36,7 +36,6 @@ add_rule('/collections', views['collection']['main'], ['GET', 'POST'])
 
 add_rule('/words', views['word']['main'], ['GET', 'POST', 'PUT', 'DELETE'])
 add_rule('/searchone', views['word']['search_one'], ['GET'])
-add_rule('/searchmany', views['word']['search_many'], ['GET'])
 add_rule('/updatewordlevel', views['word']['update_level'], ['PUT'])
 add_rule('/words/csv', views['word']['csv'], ['GET'])
 
