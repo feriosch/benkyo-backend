@@ -6,7 +6,7 @@ from jap_dev.helpers.authentication import validate_session
 import jap_dev.responses.word.search as responses
 
 
-class SearchWordView(MethodView):
+class WordSearchView(MethodView):
     decorators = [validate_schema('search_one_word_schema')]
 
     def get(self, params):

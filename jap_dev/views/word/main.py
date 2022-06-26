@@ -9,7 +9,7 @@ from jap_dev.responses.word.main.update import update_word_response
 from jap_dev.responses.word.main.delete import delete_word_response
 
 
-class MainWordView(MethodView):
+class WordMainView(MethodView):
     decorators = [validate_schema('word_schema')]
 
     def get(self, params):
