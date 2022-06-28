@@ -19,3 +19,7 @@ def kanjis():
 
 def kanji_irregular_components():
     return database['kanjiIrregularComponents']
+
+
+def clauses():
+    return database['clauses']
