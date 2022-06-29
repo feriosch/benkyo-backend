@@ -10,9 +10,9 @@
     type: Type
     (optional) tags: Tags
     definition: string
-    keys: [Key]
+    keys: [Example]
     formations: [Formation]
-    examples: [Example]
+    (optional) examples: [Example]
     notes: [Note]
     related: [Related]
 }
@@ -44,7 +44,7 @@
 }
 ```
 
-### Key
+### Example
 ```ignorelang
 {
     [1] sentence: string
@@ -60,11 +60,11 @@
 }
 ```
 
-### Example
+### Section
 ```ignorelang
 {
-    [1] sentence: string
-    translation: string
+    explanation: string
+    (optional) examples: [Example]
 }
 ```
 
@@ -85,23 +85,30 @@
 }
 ```
 
-### Section
-```ignorelang
-{
-    explanation: string
-    (optional) examples: [Example]
-}
-```
 
 ## Additional Notes
-### [1] Sentence formaasst
+### [1] Sentence format
 Sentences have the following format:
 
 `かれが外国語を好んで*勉強している*_のは_、_一つには_、異文化学習が好んだ_からだ_。`
 
 Where:
- - \*X* : X is the highlighted grammar.
+ - \*X* : X is a grammatical component (red).
  - \_X_ : X is a bold component.
- - \$X$ : X is incorrect
+ - \$X$ : X is an incorrect component.
 
-The front end will split the sentences and give the corresponding format according to the type.
+The backend will split the sentences and give the corresponding list format according to the type 
+to the front end.
+- Example: `かれが外国語を好んで*勉強している*_のは_、_一つには_、異文化学習が好んだ_からだ_。`
+```python
+sentence = [
+    'n/かれが外国語を好んで',
+    'b/勉強している',
+    'r/のは',
+    'n/、',
+    'r/一つには',
+    'n/、異文化学習が好んだ',
+    'r/からだ',
+    'n/。'
+]
+```
