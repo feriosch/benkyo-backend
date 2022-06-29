@@ -5,15 +5,16 @@
 {
     title: string
     (optional) hiragana: string
-    level: string
     translation: string
+    level: string
     type: Type
     (optional) tags: Tags
     definition: string
     keys: [Key]
     formations: [Formation]
     examples: [Example]
-    
+    notes: [Note]
+    related: [Related]
 }
 ```
 
@@ -22,7 +23,7 @@
 {
     adjective: boolean
     adverb: boolean
-    auxiliar: boolean
+    auxiliary: boolean
     conjunction: boolean
     modifier: boolean
     noun: boolean

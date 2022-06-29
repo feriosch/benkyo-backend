@@ -6,7 +6,7 @@ from jap_dev.information import clauses
 def get_clauses(level, filter_by, order_field, order_direction, page_size, page_number):
     pipeline = []
     if level:
-        pipeline.append({'$match': {'from': level}})
+        pipeline.append({'$match': {'level': level}})
     if filter_by:
         pipeline.append({
             '$match': {
