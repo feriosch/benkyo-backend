@@ -39,6 +39,8 @@ add_rule('/words/search', views['word']['search'], ['GET'])
 add_rule('/words/level', views['word']['level'], ['PUT'])
 add_rule('/words/csv', views['word']['csv'], ['GET'])
 
+add_rule('/clauses', views['clause']['main'], ['POST'])
+
 
 @application.errorhandler(BadRequestException)
 def handle_bad_request(e):

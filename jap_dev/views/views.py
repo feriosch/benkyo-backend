@@ -10,6 +10,7 @@ from jap_dev.views.collection.main import MainCollectionView
 from jap_dev.views.user.main import MainUserView
 from jap_dev.views.user.login import UserLoginView
 from jap_dev.views.user.session import UserSessionView
+from jap_dev.views.clause.main import ClauseMainView
 
 views = {
     'kanji': {
@@ -31,5 +32,8 @@ views = {
         'main': MainUserView.as_view('user'),
         'login': UserLoginView.as_view('user_login'),
         'session': UserSessionView.as_view('user_session')
+    },
+    'clause': {
+        'main': ClauseMainView.as_view('clause')
     }
 }
