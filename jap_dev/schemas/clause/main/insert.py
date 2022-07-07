@@ -36,10 +36,6 @@ clause_section = {
     Optional('examples'): Schema([clause_example])
 }
 
-clause_note = {
-    'sections': Schema([clause_section])
-}
-
 clause_related = {
     'title': Use(str, error='related.title error'),
     Optional('hiragana'): Use(str, error='related.hiragana error'),
@@ -47,17 +43,17 @@ clause_related = {
     'sections': Schema([clause_section])
 }
 
-clause_insert_schema = {
+clause_insert_schema = Schema({
     'title': Use(str, error='title error'),
     Optional('hiragana'): Use(str, error='hiragana error'),
     'translation': Use(str, error='translation error'),
     'level': Use(str, error='level error'),
-    'type': Schema(clause_type),
+    'clause_type': Schema(clause_type),
     Optional('tags'): Schema(clause_tags),
     'definition': Use(str, error='definition error'),
     'keys': Schema([clause_example]),
     'formations': Schema([clause_formation]),
     Optional('examples'): Schema([clause_example]),
-    'notes': Schema([clause_note]),
-    'related': Schema([clause_related])
-}
+    'notes': Schema([clause_section]),
+    Optional('related'): Schema([clause_related])
+})

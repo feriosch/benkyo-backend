@@ -13,8 +13,8 @@
     keys: [Example]
     formations: [Formation]
     (optional) examples: [Example]
-    notes: [Note]
-    related: [Related]
+    notes: [Section]
+    (optional) related: [Related]
 }
 ```
 
@@ -65,13 +65,6 @@
 {
     explanation: string
     (optional) examples: [Example]
-}
-```
-
-### Note
-```ignorelang
-{
-    sections: [Section]
 }
 ```
 
