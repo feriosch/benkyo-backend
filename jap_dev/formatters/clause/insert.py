@@ -14,20 +14,24 @@ def format_type_insertion(clause_type):
 
 
 def format_clause_insertion(clause_info):
-    formatted_object = {
-        'title': clause_info['title'],
-        'translation': clause_info['translation'],
-        'level': clause_info['level'],
-        'type': format_type_insertion(clause_info['clause_type']),
-        'keys': clause_info['keys'],
-        'formations': clause_info['formations'],
-        'examples': clause_info['examples'],
-        'notes': clause_info['notes'],
-        'related': clause_info['related']
-    }
+    formatted_object = dict()
+
+    formatted_object['title'] = clause_info['title']
+    if 'hiragana' in clause_info:
+        formatted_object['hiragana'] = clause_info['hiragana']
+    formatted_object['translation'] = clause_info['translation']
+    formatted_object['level'] = clause_info['level']
+    formatted_object['type'] = format_type_insertion(clause_info['clause_type'])
     if 'tags' in clause_info:
         if clause_info['tags']:
             formatted_object['tags'] = clause_info['tags']
-    if 'hiragana' in clause_info:
-        formatted_object['hiragana'] = clause_info['hiragana']
+    formatted_object['definition'] = clause_info['definition']
+    formatted_object['keys'] = clause_info['keys']
+    formatted_object['formations'] = clause_info['formations']
+    if 'examples' in clause_info:
+        formatted_object['examples'] = clause_info['examples']
+    formatted_object['notes'] = clause_info['notes']
+    if 'related' in clause_info:
+        formatted_object['related'] = clause_info['related']
+
     return formatted_object
