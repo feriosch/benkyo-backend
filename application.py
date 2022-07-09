@@ -40,6 +40,7 @@ add_rule('/words/level', views['word']['level'], ['PUT'])
 add_rule('/words/csv', views['word']['csv'], ['GET'])
 
 add_rule('/clauses', views['clause']['main'], ['GET', 'POST'])
+add_rule('/clauses/search', views['clause']['search'], ['GET'])
 
 
 @application.errorhandler(BadRequestException)
