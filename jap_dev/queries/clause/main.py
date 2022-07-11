@@ -53,4 +53,4 @@ def update_clause(clause_id, clause_info):
 
 
 def delete_clause(clause_id):
-    return clause_id().delete_one({'_id': ObjectId(clause_id)})
+    return clauses().delete_one({'_id': ObjectId(clause_id)})
