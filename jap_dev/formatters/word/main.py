@@ -17,8 +17,20 @@ def format_word(word):
     return formatted_word
 
 
+def format_summarized_word(word):
+    formatted_word = dict()
+
+    formatted_word['id'] = str(word['_id'])
+    formatted_word['word'] = word['word']
+    if 'hiragana' in word:
+        formatted_word['hiragana'] = word['hiragana']
+    formatted_word['spanish'] = word['spanish']
+
+    return formatted_word
+
+
 def format_all_words(words):
     result = []
     for word in words:
-        result.append(format_word(word))
+        result.append(format_summarized_word(word))
     return result

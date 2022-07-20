@@ -7,6 +7,9 @@ def get_words(collection, filter_by, order_field, order_direction, page_size, pa
     pipeline = []
     if collection:
         pipeline.append({'$match': {'from': collection}})
+        word_count = get_total_words(collection)
+    else:
+        word_count = get_total_words()
     if filter_by:
         pipeline.append({
             '$match': {
@@ -22,12 +25,27 @@ def get_words(collection, filter_by, order_field, order_direction, page_size, pa
         })
     if order_field:
         pipeline.append({'$sort': {order_field: order_direction}})
-    word_count = len(list(words().aggregate(pipeline)))
     if page_size:
         skips = page_size * (page_number - 1)
         pipeline.append({'$skip': skips})
         pipeline.append({'$limit': page_size})
+    pipeline.append({
+        '$project': {
+            '_id': 1,
+            'word': 1,
+            'hiragana': 1,
+            'spanish': 1
+        }
+    })
     return words().aggregate(pipeline), word_count
+
+
+def get_total_words(collection=None):
+    pipeline = []
+    if collection:
+        pipeline.append({'$match': {'from': collection}})
+    pipeline.append({'$count': 'total'})
+    return words().aggregate(pipeline).next().get('total')
 
 
 def insert_word(word):
