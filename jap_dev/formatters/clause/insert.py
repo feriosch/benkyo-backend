@@ -1,16 +1,28 @@
 def format_type_insertion(clause_type):
-    return {
-        'adjective': bool(clause_type['adjective']) if ('adjective' in clause_type) else False,
-        'adverb': bool(clause_type['adverb']) if ('adverb' in clause_type) else False,
-        'auxiliary': bool(clause_type['auxiliary']) if ('auxiliary' in clause_type) else False,
-        'conjunction': bool(clause_type['conjunction']) if ('conjunction' in clause_type) else False,
-        'modifier': bool(clause_type['modifier']) if ('modifier' in clause_type) else False,
-        'noun': bool(clause_type['noun']) if ('noun' in clause_type) else False,
-        'particle': bool(clause_type['particle']) if ('particle' in clause_type) else False,
-        'phrase': bool(clause_type['phrase']) if ('phrase' in clause_type) else False,
-        'structure': bool(clause_type['structure']) if ('structure' in clause_type) else False,
-        'suffix': bool(clause_type['suffix']) if ('suffix' in clause_type) else False
-    }
+    formatted_type = dict()
+
+    if 'adjective' in clause_type and clause_type['adjective']:
+        formatted_type['adjective'] = True
+    if 'adverb' in clause_type and clause_type['adverb']:
+        formatted_type['adverb'] = True
+    if 'auxiliary' in clause_type and clause_type['auxiliary']:
+        formatted_type['auxiliary'] = True
+    if 'conjunction' in clause_type and clause_type['conjunction']:
+        formatted_type['conjunction'] = True
+    if 'modifier' in clause_type and clause_type['modifier']:
+        formatted_type['modifier'] = True
+    if 'noun' in clause_type and clause_type['noun']:
+        formatted_type['noun'] = True
+    if 'particle' in clause_type and clause_type['particle']:
+        formatted_type['particle'] = True
+    if 'phrase' in clause_type and clause_type['phrase']:
+        formatted_type['phrase'] = True
+    if 'structure' in clause_type and clause_type['structure']:
+        formatted_type['structure'] = True
+    if 'suffix' in clause_type and clause_type['suffix']:
+        formatted_type['suffix'] = True
+
+    return formatted_type
 
 
 def format_clause_insertion(clause_info):
