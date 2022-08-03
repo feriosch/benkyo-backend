@@ -4,6 +4,7 @@ import jap_dev.schemas.clause.main.insert as insert_schemas
 
 clause_update_schema = Schema({
     'clause_id': Use(str, error='id error (required)'),
+    Optional('title'): Use(str, error='title error'),
     Optional('hiragana'): Use(str, error='hiragana error'),
     Optional('translation'): Use(str, error='translation error'),
     Optional('level'): Use(str, error='level error'),

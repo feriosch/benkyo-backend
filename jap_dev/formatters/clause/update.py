@@ -3,6 +3,9 @@ from jap_dev.formatters.clause.insert import format_type_insertion
 
 def format_clause_update(clause_info):
     formatted_clause_info = dict()
+
+    if 'title' in clause_info:
+        formatted_clause_info['title'] = clause_info['title']
     
     if 'hiragana' in clause_info:
         formatted_clause_info['hiragana'] = clause_info['hiragana']
