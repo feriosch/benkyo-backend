@@ -68,7 +68,7 @@ def format_sentence(sentence):
                     sentence_components.append(component)
                 component = str()
                 component += character
-                component += '/'
+                component += '|'
                 is_between_symbols = True
             else:
                 sentence_components.append(component)
