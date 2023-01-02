@@ -12,5 +12,3 @@ client_uri = 'mongodb+srv://{username}:{password}@cluster0.jtg6e.mongodb.net/{na
 
 client = MongoClient(client_uri)
 database = client.get_database()
-
-
