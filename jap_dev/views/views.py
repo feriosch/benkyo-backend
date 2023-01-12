@@ -7,6 +7,7 @@ from jap_dev.views.word.search import WordSearchView
 from jap_dev.views.word.level import WordLevelView
 from jap_dev.views.word.csv import WordCsvView
 from jap_dev.views.collection.main import MainCollectionView
+from jap_dev.views.collection.search import CollectionSearchView
 from jap_dev.views.user.main import MainUserView
 from jap_dev.views.user.login import UserLoginView
 from jap_dev.views.user.session import UserSessionView
@@ -27,7 +28,8 @@ views = {
         'csv': WordCsvView.as_view('word_csv')
     },
     'collection': {
-        'main': MainCollectionView.as_view('collection')
+        'main': MainCollectionView.as_view('collection'),
+        'search': CollectionSearchView.as_view('collection_search')
     },
     'user': {
         'main': MainUserView.as_view('user'),

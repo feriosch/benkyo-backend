@@ -33,6 +33,7 @@ add_rule('/kanjis/exists', views['kanji']['verify'], ['GET'])
 add_rule('/kanjis/components', views['kanji']['components'], ['GET'])
 
 add_rule('/collections', views['collection']['main'], ['GET', 'POST'])
+add_rule('/collections/search', views['collection']['search'], ['GET'])
 
 add_rule('/words', views['word']['main'], ['GET', 'POST', 'PUT', 'DELETE'])
 add_rule('/words/search', views['word']['search'], ['GET'])
