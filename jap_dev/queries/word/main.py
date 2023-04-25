@@ -14,7 +14,7 @@ def get_words(collection, filter_by, order_field, order_direction, page_size, pa
         pipeline.append({
             '$match': {
                 '$or': [
-                    {'word': {'$regex': '^' + filter_by}},
+                    {'word': {'$regex': filter_by}},
                     {'hiragana': {'$regex': '^' + filter_by}},
                     {'spanish': {
                         '$regex': filter_by,
