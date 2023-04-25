@@ -7,16 +7,9 @@ from jap_dev.schemas.kanji.components import kanji_components_schema
 import jap_dev.responses.kanji.components as responses
 
 
-class KanjiComponentsView (MethodView):
+class KanjiComponentsView(MethodView):
     decorators = [validate_session]
 
     @validate_schema(kanji_components_schema)
     def get(self):
-        params = get_params()
-        starting = None
-        limit = None
-        if 'starting' in params:
-            starting = params['starting']
-        if 'limit' in params:
-            limit = int(params['limit'])
-        return make_response(responses.get_distinct_components_response(starting=starting, limit=limit))
+        return make_response(responses.get_distinct_components_response(get_params()))
