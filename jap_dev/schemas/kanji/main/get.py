@@ -11,5 +11,6 @@ kanji_get_schema = Schema({
     Optional('order_field'): Use(str, error='Order field error'),
     Optional('order_direction'): Use(str, error='Order direction error'),
     Optional('page_size'): Use(int, error='Page size error'),
-    Optional('page_number'): Use(int, 'Page number error')
+    Optional('page_number'): Use(int, 'Page number error'),
+    Optional('compact'): Use(bool, 'Compact error')
 })

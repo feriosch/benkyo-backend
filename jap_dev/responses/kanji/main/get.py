@@ -1,7 +1,7 @@
 import math
 
 from jap_dev.queries.kanji.main import get_kanji
-from jap_dev.formatters.kanji.summarized import format_all_summarized_kanjis
+from jap_dev.formatters.kanji.summarized import format_all_summarized_kanjis, format_all_compacted_kanjis
 
 
 def get_pagination_details(total_kanji_count, result_size, page_size, page_number):
@@ -67,7 +67,12 @@ def get_kanji_response(params):
         page_size=page_size,
         page_number=page_number
     )
-    formatted_kanjis = format_all_summarized_kanjis(kanjis)
+
+    if 'compact' in params:
+        formatted_kanjis = format_all_compacted_kanjis(kanjis)
+    else:
+        formatted_kanjis = format_all_summarized_kanjis(kanjis)
+
     page_count, next_page_number = get_pagination_details(
         kanji_count,
         len(formatted_kanjis),

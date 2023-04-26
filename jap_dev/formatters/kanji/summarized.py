@@ -14,8 +14,22 @@ def format_summarized_kanji(kanji):
     return formatted_kanji
 
 
+def format_compacted_kanji(kanji):
+    return {
+        'id': str(kanji['_id']),
+        'kanji': kanji['kanji'],
+    }
+
+
 def format_all_summarized_kanjis(kanjis):
     result = []
     for kanji in kanjis:
         result.append(format_summarized_kanji(kanji))
+    return result
+
+
+def format_all_compacted_kanjis(kanjis):
+    result = []
+    for kanji in kanjis:
+        result.append(format_compacted_kanji(kanji))
     return result
