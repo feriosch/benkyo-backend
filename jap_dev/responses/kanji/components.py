@@ -25,7 +25,8 @@ def get_distinct_components_response(params):
             page_number = 1
         if page_number < total_pages:
             next_page_number = page_number + 1
-        components = pages[page_number - 1]
+        if pages:
+            components = pages[page_number - 1]
 
     return {
         'components': components,
