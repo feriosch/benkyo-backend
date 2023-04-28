@@ -5,7 +5,6 @@ from flask_cors import CORS
 from jap_dev.helpers.exceptions import BadRequestException, UnauthorizedException
 from jap_dev.views.views import views
 
-
 application = Flask(__name__)
 CORS(application)
 
@@ -31,6 +30,7 @@ add_rule('/kanjis', views['kanji']['main'], ['GET', 'POST', 'PUT'])
 add_rule('/kanjis/search', views['kanji']['search'], ['GET'])
 add_rule('/kanjis/exists', views['kanji']['verify'], ['GET'])
 add_rule('/kanjis/components', views['kanji']['components'], ['GET'])
+add_rule('/kanjis/radicals', views['kanji']['radicals'], ['GET'])
 
 add_rule('/collections', views['collection']['main'], ['GET', 'POST'])
 add_rule('/collections/search', views['collection']['search'], ['GET'])

@@ -31,3 +31,7 @@ def get_radicals(components):
     for component in components:
         fill_radicals(component, radicals_list)
     return radicals_list
+
+
+def get_distinct_radicals():
+    return kanjis().distinct('radicals')
