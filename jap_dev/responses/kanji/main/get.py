@@ -17,12 +17,13 @@ def get_pagination_details(total_kanji_count, result_size, page_size, page_numbe
 
 
 def get_kanji_response(params):
+    components = []
+    radicalize = False
     filter_by = None
     order_field = None
     order_direction = None
     page_size = None
     page_number = None
-    components = []
     if 'c1' in params:
         components.append(params['c1'])
     if 'c2' in params:
@@ -35,6 +36,8 @@ def get_kanji_response(params):
         components.append(params['c5'])
     if 'c6' in params:
         components.append(params['c6'])
+    if 'radicalize' in params:
+        radicalize = True
     if 'filter_by' in params:
         filter_by = params['filter_by']
     if 'order_field' in params:
@@ -61,6 +64,7 @@ def get_kanji_response(params):
 
     kanjis, kanji_count = get_kanji(
         components=components,
+        radicalize=radicalize,
         filter_by=filter_by,
         order_field=order_field,
         order_direction=order_direction,

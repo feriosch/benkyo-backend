@@ -7,6 +7,7 @@ kanji_get_schema = Schema({
     Optional('c4'): Use(str, error='Component 4 error'),
     Optional('c5'): Use(str, error='Component 5 error'),
     Optional('c6'): Use(str, error='Component 6 error'),
+    Optional('radicalize'): Use(bool, 'Radicalize error'),
     Optional('filter_by'): Use(str, error='Filter error'),
     Optional('order_field'): Use(str, error='Order field error'),
     Optional('order_direction'): Use(str, error='Order direction error'),

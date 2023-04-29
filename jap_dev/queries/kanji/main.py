@@ -3,12 +3,22 @@ from bson.objectid import ObjectId
 from jap_dev.information import kanjis
 
 
-def get_kanji(components, filter_by, order_field, order_direction, page_size, page_number):
+def get_kanji(components, radicalize, filter_by, order_field, order_direction, page_size, page_number):
     pipeline = []
     if components:
-        pipeline.append({
-            '$match': {'components': {'$all': components}}
-        })
+        if radicalize:
+            pipeline.append({
+                '$match': {
+                    '$or': [
+                        {'components': {'$all': components}},
+                        {'radicals': {'$all': components}},
+                    ]
+                }
+            })
+        else:
+            pipeline.append({
+                '$match': {'components': {'$all': components}}
+            })
     if filter_by:
         pipeline.append({
             '$match': {
