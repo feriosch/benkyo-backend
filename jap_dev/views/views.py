@@ -1,7 +1,8 @@
 from jap_dev.views.kanji.main import MainKanjiView
 from jap_dev.views.kanji.search import SearchKanjiView
 from jap_dev.views.kanji.verify import VerifyKanjiView
-from jap_dev.views.kanji.components import KanjiComponentsView
+from jap_dev.views.kanji.components.regular import KanjiRegularComponentsView
+from jap_dev.views.kanji.components.irregular import KanjiIrregularComponentsView
 from jap_dev.views.kanji.radicals import KanjiRadicalsView
 from jap_dev.views.word.main import WordMainView
 from jap_dev.views.word.search import WordSearchView
@@ -20,7 +21,10 @@ views = {
         'main': MainKanjiView.as_view('kanji'),
         'search': SearchKanjiView.as_view('kanji_search'),
         'verify': VerifyKanjiView.as_view('kanji_verify'),
-        'components': KanjiComponentsView.as_view('kanji_components'),
+        'components': {
+            'regular': KanjiRegularComponentsView.as_view('kanji_regular_components'),
+            'irregular': KanjiIrregularComponentsView.as_view('kanji_irregular_components'),
+        },
         'radicals': KanjiRadicalsView.as_view('kanji_radicals')
     },
     'word': {

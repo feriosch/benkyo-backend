@@ -1,8 +1,9 @@
-from jap_dev.information import kanjis, kanji_irregular_components
+from jap_dev.information import kanjis
+from jap_dev.queries.kanji.components.irregular import find_irregular_component
 
 
 def find_irregular_radicals(component):
-    found_component = kanji_irregular_components().find_one({'component': component})
+    found_component = find_irregular_component(component)
     if found_component:
         return found_component['radicals']
 

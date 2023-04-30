@@ -1,4 +1,4 @@
-from jap_dev.queries.kanji.components import get_distinct_components
+from jap_dev.queries.kanji.components.regular import get_distinct_components
 
 
 def get_distinct_components_response(params):
