@@ -30,7 +30,7 @@ add_rule('/kanjis', views['kanji']['main'], ['GET', 'POST', 'PUT'])
 add_rule('/kanjis/search', views['kanji']['search'], ['GET'])
 add_rule('/kanjis/exists', views['kanji']['verify'], ['GET'])
 add_rule('/kanjis/components', views['kanji']['components']['regular'], ['GET'])
-add_rule('/kanjis/components/irregular', views['kanji']['components']['irregular'], ['GET'])
+add_rule('/kanjis/components/irregular', views['kanji']['components']['irregular'], ['GET', 'POST'])
 add_rule('/kanjis/radicals', views['kanji']['radicals'], ['GET'])
 
 add_rule('/collections', views['collection']['main'], ['GET', 'POST'])
