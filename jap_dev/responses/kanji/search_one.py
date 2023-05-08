@@ -26,3 +26,10 @@ def get_kanji_by_kanji_response(kanji):
     if result is None:
         return {'error': 'No matched kanji'}, 400
     return jsonify(format_kanji(result))
+
+
+def get_kanji_by_v1_response(v1):
+    result = queries.get_one_by_v1(int(v1))
+    if result is None:
+        return {'error': 'No matched kanji'}, 400
+    return jsonify(format_kanji(result))

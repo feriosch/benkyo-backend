@@ -17,4 +17,6 @@ class SearchKanjiView(MethodView):
             return make_response(responses.get_kanji_by_id_response(params['kanji_id']))
         elif 'kanji' in params:
             return make_response(responses.get_kanji_by_kanji_response(params['kanji']))
+        elif 'v1' in params:
+            return make_response(responses.get_kanji_by_v1_response(params['v1']))
         return make_response(responses.get_random_kanji_response())

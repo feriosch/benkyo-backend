@@ -11,6 +11,10 @@ def get_one_by_kanji(kanji):
     return kanjis().find_one({'kanji': kanji})
 
 
+def get_one_by_v1(v1):
+    return kanjis().find_one({'v1': v1})
+
+
 def get_one_random():
     return kanjis().aggregate([
         {'$sample': {'size': 1}}
