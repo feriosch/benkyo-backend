@@ -18,11 +18,11 @@ def fill_radicals(spanish, radicals_list):
         else:
             radicals_list.append(spanish)
     else:
-        if 'recursive' in kanji:
-            radicals_list.append(kanji['spanish'])
-        elif irregular_radicals:
+        if irregular_radicals:
             for radical in irregular_radicals:
                 radicals_list.append(radical)
+        elif 'recursive' in kanji:
+            radicals_list.append(kanji['spanish'])
         else:
             if 'components' in kanji:
                 for component in kanji['components']:
