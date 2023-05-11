@@ -12,7 +12,11 @@ def fill_radicals(spanish, radicals_list):
     kanji = kanjis().find_one({'spanish': spanish})
     irregular_radicals = find_irregular_radicals(spanish)
     if kanji is None:
-        radicals_list.append(spanish)
+        if irregular_radicals:
+            for radical in irregular_radicals:
+                radicals_list.append(radical)
+        else:
+            radicals_list.append(spanish)
     else:
         if 'recursive' in kanji:
             radicals_list.append(kanji['spanish'])
