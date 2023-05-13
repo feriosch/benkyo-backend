@@ -8,12 +8,7 @@ def get_kanji(components, radicalize, filter_by, order_field, order_direction, p
     if components:
         if radicalize:
             pipeline.append({
-                '$match': {
-                    '$or': [
-                        {'components': {'$all': components}},
-                        {'radicals': {'$all': components}},
-                    ]
-                }
+                '$match': {'radicals': {'$all': components}},
             })
         else:
             pipeline.append({
