@@ -1,6 +1,7 @@
 from jap_dev.views.kanji.main import MainKanjiView
 from jap_dev.views.kanji.search import SearchKanjiView
 from jap_dev.views.kanji.verify import VerifyKanjiView
+from jap_dev.views.kanji.csv import KanjiCsvView
 from jap_dev.views.kanji.components.regular import KanjiRegularComponentsView
 from jap_dev.views.kanji.components.irregular import KanjiIrregularComponentsView
 from jap_dev.views.kanji.radicals import KanjiRadicalsView
@@ -21,6 +22,7 @@ views = {
         'main': MainKanjiView.as_view('kanji'),
         'search': SearchKanjiView.as_view('kanji_search'),
         'verify': VerifyKanjiView.as_view('kanji_verify'),
+        'csv': KanjiCsvView.as_view('kanji_csv'),
         'components': {
             'regular': KanjiRegularComponentsView.as_view('kanji_regular_components'),
             'irregular': KanjiIrregularComponentsView.as_view('kanji_irregular_components'),
