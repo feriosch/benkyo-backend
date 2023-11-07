@@ -6,7 +6,7 @@ from jap_dev.information import words
 def get_words(collection, filter_by, order_field, order_direction, page_size, page_number):
     pipeline = []
     if collection:
-        pipeline.append({'$match': {'from': collection}})
+        pipeline.append({'$match': {'group': collection}})
         word_count = get_total_words(collection)
     else:
         word_count = get_total_words()
@@ -43,7 +43,7 @@ def get_words(collection, filter_by, order_field, order_direction, page_size, pa
 def get_total_words(collection=None):
     pipeline = []
     if collection:
-        pipeline.append({'$match': {'from': collection}})
+        pipeline.append({'$match': {'group': collection}})
     pipeline.append({'$count': 'total'})
     return words().aggregate(pipeline).next().get('total')
 

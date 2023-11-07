@@ -14,8 +14,8 @@ class WordCsvView(MethodView):
     @validate_schema(word_csv_get_schema)
     def get(self):
         params = get_params()
-        if 'from' in params:
-            collection = params['from']
+        if 'group' in params:
+            collection = params['group']
             csv_response = responses.get_words_csv_response(collection)
             if csv_response:
                 return send_from_directory('files', f'{collection}.csv', as_attachment=True)

@@ -17,7 +17,7 @@ def format_word_insertion(word_info):
     formatted_object = {
         'word': word_info['word'],
         'spanish': word_info['spanish'],
-        'from': word_info['from'],
+        'group': word_info['group'],
         'level': int(word_info['level']) if ('level' in word_info) else 0,
         'sentences': word_info['sentences'] if ('sentences' in word_info) else [],
         'type': format_type_insertion(word_info['word_type'])

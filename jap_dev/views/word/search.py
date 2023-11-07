@@ -17,7 +17,7 @@ class WordSearchView(MethodView):
             return make_response(responses.get_one_by_word_response(params['word']))
         elif 'word_id' in params:
             return make_response(responses.get_one_by_id_response(params['word_id']))
-        elif 'from' in params:
-            return make_response(responses.get_one_random_by_collection_response(params['from']))
+        elif 'group' in params:
+            return make_response(responses.get_one_random_by_collection_response(params['group']))
         else:
             return make_response(responses.get_one_random_response())

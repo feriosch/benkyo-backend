@@ -7,4 +7,4 @@ def check_if_word_exists(word):
 
 # TODO: Check this out
 def check_if_collection_exists(collection):
-    return collection in words().distinct('from')
+    return collection in words().distinct('group')

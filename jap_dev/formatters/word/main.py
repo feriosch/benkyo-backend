@@ -3,7 +3,7 @@ def format_word(word):
         'id': str(word['_id']),
         'word': word['word'],
         'spanish': word['spanish'],
-        'from': word['from'],
+        'group': word['group'],
         'level': word['level'],
         'sentences': word['sentences'],
         'type': word['type']

@@ -3,8 +3,8 @@ from jap_dev.formatters.word.insert import format_type_insertion
 
 def format_word_update(word_info):
     formatted_info = dict()
-    if 'from' in word_info:
-        formatted_info['from'] = word_info['from']
+    if 'group' in word_info:
+        formatted_info['group'] = word_info['group']
     if 'spanish' in word_info:
         formatted_info['spanish'] = word_info['spanish']
     if 'hiragana' in word_info:

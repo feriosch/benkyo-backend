@@ -13,7 +13,7 @@ def get_one_by_id(word_id):
 
 def get_one_random_by_collection(collection):
     return words().aggregate([
-        {'$match': {'from': collection}},
+        {'$match': {'group': collection}},
         {'$sample': {'size': 1}}
     ])
 

@@ -14,7 +14,6 @@ bucket_name = os.getenv('BUCKET_NAME')
 
 
 def insert_collection_response(collection):
-    print(f'collection: ${collection}')
     if check_if_collection_exists(collection['collection_name']):
         return {'error': 'Repeated collection name'}, 400
     image_url = upload_collection_image(

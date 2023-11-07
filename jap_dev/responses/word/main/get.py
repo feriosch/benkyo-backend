@@ -25,8 +25,8 @@ def get_words_response(params):
     page_size = None
     page_number = None
 
-    if 'from' in params and params['from'] != 'all':
-        collection = params['from']
+    if 'group' in params and params['group'] != 'all':
+        collection = params['group']
         # TODO: Check this out
         if not check_if_collection_exists(collection):
             return {'error': 'Collection not found'}, 400

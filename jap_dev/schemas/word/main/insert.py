@@ -30,7 +30,7 @@ word_tags_insert_schema = Schema({
 word_insert_schema = Schema({
     'word': Use(str, error='word error'),
     'spanish': Use(str, error='spanish error'),
-    'from': And(Use(str), lambda x: x != 'all', error='from (collection) error'),
+    'group': And(Use(str), lambda x: x != 'all', error='from (collection) error'),
     Optional('hiragana'): Use(str, error='hiragana error'),
     Optional('level'): And(Use(int), lambda x: 0 <= x <= 5, error='level error'),
     Optional('word_type'): word_type_insert_schema,

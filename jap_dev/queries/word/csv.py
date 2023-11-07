@@ -4,7 +4,7 @@ from jap_dev.information import words
 def get_words_for_csv(collection=None):
     pipeline = []
     if collection:
-        pipeline.append({'$match': {'from': collection}})
+        pipeline.append({'$match': {'group': collection}})
     pipeline.append({
         '$project': {
             '_id': 0,
