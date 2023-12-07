@@ -4,7 +4,6 @@ def format_word(word):
         'word': word['word'],
         'spanish': word['spanish'],
         'group': word['group'],
-        'level': word['level'],
         'sentences': word['sentences'],
         'type': word['type']
     }

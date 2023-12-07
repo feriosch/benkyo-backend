@@ -1,16 +1,16 @@
 from schema import Schema, Optional, Use, And
 
 word_type_insert_schema = Schema({
-    Optional('noun'): And(Use(int), lambda x: 0 <= x <= 9, error='type.noun error'),
-    Optional('suru_verb'): And(Use(int), lambda x: 0 <= x <= 9, error='type.suru_verb error'),
-    Optional('no_adjective'): And(Use(int), lambda x: 0 <= x <= 9, error='type.no_adjective error'),
-    Optional('na_adjective'): And(Use(int), lambda x: 0 <= x <= 9, error='type.na_adjective error'),
-    Optional('i_adjective'): And(Use(int), lambda x: 0 <= x <= 9, error='type.i_adjective error'),
-    Optional('adverb'): And(Use(int), lambda x: 0 <= x <= 9, error='type.adverb error'),
-    Optional('verb'): And(Use(int), lambda x: 0 <= x <= 9, error='type.verb error'),
-    Optional('adjectival_noun'): And(Use(int), lambda x: 0 <= x <= 9, error='type.adjectival_noun error'),
-    Optional('adverbial_noun'): And(Use(int), lambda x: 0 <= x <= 9, error='type.adverbial_noun error'),
-    Optional('counter'): And(Use(int), lambda x: 0 <= x <= 9, error='type.counter error'),
+    Optional('noun'): And(Use(int), lambda x: 0 < x <= 9, error='type.noun error'),
+    Optional('suru'): And(Use(int), lambda x: 0 < x <= 9, error='type.suru error'),
+    Optional('no_adj'): And(Use(int), lambda x: 0 < x <= 9, error='type.no_adj error'),
+    Optional('na_adj'): And(Use(int), lambda x: 0 < x <= 9, error='type.na_adj error'),
+    Optional('i_adj'): And(Use(int), lambda x: 0 < x <= 9, error='type.i_adj error'),
+    Optional('adv'): And(Use(int), lambda x: 0 < x <= 9, error='type.adv error'),
+    Optional('verb'): And(Use(int), lambda x: 0 < x <= 9, error='type.verb error'),
+    Optional('adj_noun'): And(Use(int), lambda x: 0 < x <= 9, error='type.adj_noun error'),
+    Optional('adv_noun'): And(Use(int), lambda x: 0 < x <= 9, error='type.adv_noun error'),
+    Optional('counter'): And(Use(int), lambda x: 0 < x <= 9, error='type.counter error'),
 })
 
 word_tags_insert_schema = Schema({
@@ -22,7 +22,7 @@ word_tags_insert_schema = Schema({
     Optional('intransitive'): Use(bool, error='tags.intransitive error'),
     Optional('jlpt_n1'): Use(bool, error='tags.jlpt_n1 error'),
     Optional('joyogai'): Use(bool, error='tags.joyogai error'),
-    Optional('onomatopeic'): Use(bool, error='tags.onomatopeic error'),
+    Optional('onomatopoeic'): Use(bool, error='tags.onomatopoeic error'),
     Optional('transitive'): Use(bool, error='tags.transitive error'),
     Optional('usually_kana'): Use(bool, error='tags.usually_kana error'),
 })
