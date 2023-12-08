@@ -1,6 +1,5 @@
 import math
 
-from jap_dev.queries.word.verify import check_if_collection_exists
 from jap_dev.queries.word.main import get_words
 from jap_dev.formatters.word.main import format_all_words
 
@@ -19,6 +18,7 @@ def get_pagination_details(total_word_count, result_size, page_size, page_number
 
 def get_words_response(params):
     collection = None
+    tags = []
     filter_by = None
     order_field = None
     order_direction = None
@@ -27,9 +27,12 @@ def get_words_response(params):
 
     if 'group' in params and params['group'] != 'all':
         collection = params['group']
-        # TODO: Check this out
-        if not check_if_collection_exists(collection):
-            return {'error': 'Collection not found'}, 400
+    if 'tag_1' in params:
+        tags.append(params['tag_1'])
+    if 'tag_2' in params:
+        tags.append(params['tag_2'])
+    if 'tag_3' in params:
+        tags.append(params['tag_3'])
     if 'filter_by' in params:
         filter_by = params['filter_by']
     if 'order_field' in params:
@@ -56,6 +59,7 @@ def get_words_response(params):
 
     words, word_count = get_words(
         collection=collection,
+        tags=tags,
         filter_by=filter_by,
         order_field=order_field,
         order_direction=order_direction,

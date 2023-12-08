@@ -2,6 +2,9 @@ from schema import Schema, Optional, Use
 
 word_get_schema = Schema({
     Optional('group'): Use(str),
+    Optional('tag_1'): Use(str),
+    Optional('tag_2'): Use(str),
+    Optional('tag_3'): Use(str),
     Optional('filter_by'): Use(str),
     Optional('order_field'): Use(str),
     Optional('order_direction'): Use(str),

@@ -3,13 +3,15 @@ from bson.objectid import ObjectId
 from jap_dev.information import words
 
 
-def get_words(collection, filter_by, order_field, order_direction, page_size, page_number):
+def get_words(collection, tags, filter_by, order_field, order_direction, page_size, page_number):
     pipeline = []
     if collection:
         pipeline.append({'$match': {'group': collection}})
-        word_count = get_total_words(collection)
-    else:
-        word_count = get_total_words()
+    if tags:
+        tag_conditions = []
+        for tag in tags:
+            tag_conditions.append({'tags.{}'.format(tag): {'$exists': True}})
+        pipeline.append({'$match': {'$and': tag_conditions}})
     if filter_by:
         pipeline.append({
             '$match': {
@@ -23,6 +25,7 @@ def get_words(collection, filter_by, order_field, order_direction, page_size, pa
                 ]
             }
         })
+    word_count = get_total_words(pipeline)
     if order_field:
         pipeline.append({'$sort': {order_field: order_direction}})
     if page_size:
@@ -40,12 +43,14 @@ def get_words(collection, filter_by, order_field, order_direction, page_size, pa
     return words().aggregate(pipeline), word_count
 
 
-def get_total_words(collection=None):
-    pipeline = []
-    if collection:
-        pipeline.append({'$match': {'group': collection}})
+def get_total_words(main_pipeline):
+    pipeline = main_pipeline.copy()
     pipeline.append({'$count': 'total'})
-    return words().aggregate(pipeline).next().get('total')
+    result = words().aggregate(pipeline)
+    if result.alive:
+        return result.next().get('total')
+    else:
+        return 0
 
 
 def insert_word(word):
