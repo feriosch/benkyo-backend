@@ -10,19 +10,10 @@ import jap_dev.responses.word.csv as responses
 class WordCsvView(MethodView):
     decorators = [validate_session]
 
-    # Todo: Evaluate if refactor to a response
     @validate_schema(word_csv_get_schema)
     def get(self):
-        params = get_params()
-        if 'group' in params:
-            collection = params['group']
-            csv_response = responses.get_words_csv_response(collection)
-            if csv_response:
-                return send_from_directory('files', f'{collection}.csv', as_attachment=True)
-            else:
-                return {'error': 'Error processing CSV file.'}, 500
+        csv_response = responses.get_words_csv_response(get_params())
+        if csv_response:
+            return send_from_directory('files', f'{csv_response}.csv', as_attachment=True)
         else:
-            csv_response = responses.get_words_csv_response(None)
-            if csv_response:
-                return send_from_directory('files', 'benkyo.csv', as_attachment=True)
             return {'error': 'Error processing CSV file.'}, 500
