@@ -7,7 +7,7 @@ from jap_dev.schemas.word.csv import word_csv_get_schema
 import jap_dev.responses.word.csv as responses
 
 
-class WordCsvView(MethodView):
+class WordCsvMainView(MethodView):
     decorators = [validate_session]
 
     @validate_schema(word_csv_get_schema)

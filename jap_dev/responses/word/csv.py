@@ -1,6 +1,6 @@
 from pandas import DataFrame
 
-from jap_dev.queries.word.csv import get_words_for_csv
+from jap_dev.queries.word.csv import get_words_for_csv, get_jlpt_words_for_csv
 
 
 def get_words_csv_response(params):
@@ -25,4 +25,16 @@ def get_words_csv_response(params):
     if not df.empty:
         df.to_csv(f'./files/{file_name}.csv', index=False, header=False)
         return file_name
+    return False
+
+
+def get_jlpt_words_csv_response(params):
+    usually_kana = True
+    if 'usually_kana' in params:
+        usually_kana = eval(str(params['usually_kana']).capitalize())
+    df = DataFrame.from_dict(get_jlpt_words_for_csv(usually_kana))
+    df = df.reindex(columns=['word', 'hiragana', 'spanish', 'sentence', 'translation'])
+    if not df.empty:
+        df.to_csv(f'./files/jlpt.csv', index=False, header=False)
+        return True
     return False

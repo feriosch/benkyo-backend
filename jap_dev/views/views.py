@@ -7,7 +7,8 @@ from jap_dev.views.kanji.components.irregular import KanjiIrregularComponentsVie
 from jap_dev.views.kanji.radicals import KanjiRadicalsView
 from jap_dev.views.word.main import WordMainView
 from jap_dev.views.word.search import WordSearchView
-from jap_dev.views.word.csv import WordCsvView
+from jap_dev.views.word.csv.main import WordCsvMainView
+from jap_dev.views.word.csv.jlpt import WordCsvJlptView
 from jap_dev.views.collection.main import MainCollectionView
 from jap_dev.views.collection.search import CollectionSearchView
 from jap_dev.views.user.main import MainUserView
@@ -31,7 +32,10 @@ views = {
     'word': {
         'main': WordMainView.as_view('word'),
         'search': WordSearchView.as_view('word_search'),
-        'csv': WordCsvView.as_view('word_csv')
+        'csv': {
+            'main': WordCsvMainView.as_view('word_csv'),
+            'jlpt': WordCsvJlptView.as_view('word_csv_jlpt')
+        }
     },
     'collection': {
         'main': MainCollectionView.as_view('collection'),

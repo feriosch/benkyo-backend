@@ -7,3 +7,7 @@ word_csv_get_schema = Schema({
     Optional('tag_3'): Use(str),
     Optional('usually_kana'): Use(bool)
 })
+
+jlpt_word_csv_get_schema = Schema({
+    Optional('usually_kana'): Use(bool)
+})
