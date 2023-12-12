@@ -1,10 +1,15 @@
 from jap_dev.information import words
 
 
-def get_words_for_csv(collection=None, usually_kana=True):
+def get_words_for_csv(collection, tags, usually_kana):
     pipeline = []
     if collection:
         pipeline.append({'$match': {'group': collection}})
+    if tags:
+        tag_conditions = []
+        for tag in tags:
+            tag_conditions.append({'tags.{}'.format(tag): {'$exists': True}})
+        pipeline.append({'$match': {'$and': tag_conditions}})
     if usually_kana:
         word_projection = {
             '$cond': {
