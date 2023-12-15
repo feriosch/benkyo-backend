@@ -8,10 +8,7 @@ def get_words(collection, tags, filter_by, order_field, order_direction, page_si
     if collection:
         pipeline.append({'$match': {'group': collection}})
     if tags:
-        tag_conditions = []
-        for tag in tags:
-            tag_conditions.append({'tags.{}'.format(tag): {'$exists': True}})
-        pipeline.append({'$match': {'$and': tag_conditions}})
+        pipeline.append({'$match': {'tags': {'$all': tags}}})
     if filter_by:
         pipeline.append({
             '$match': {
