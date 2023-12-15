@@ -37,7 +37,8 @@ def get_words(collection, tags, filter_by, order_field, order_direction, page_si
             '_id': 1,
             'word': 1,
             'hiragana': 1,
-            'spanish': 1
+            'spanish': 1,
+            'tags': 1
         }
     })
     return words().aggregate(pipeline), word_count

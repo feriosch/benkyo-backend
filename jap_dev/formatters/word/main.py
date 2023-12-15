@@ -24,7 +24,8 @@ def format_summarized_word(word):
     if 'hiragana' in word:
         formatted_word['hiragana'] = word['hiragana']
     formatted_word['spanish'] = word['spanish']
-
+    if 'tags' in word:
+        formatted_word['tags'] = word['tags']
     return formatted_word
 
 
