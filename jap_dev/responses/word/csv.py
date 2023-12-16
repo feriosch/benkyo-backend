@@ -1,6 +1,7 @@
 from pandas import DataFrame
 
 from jap_dev.queries.word.csv import get_words_for_csv, get_jlpt_words_for_csv
+from jap_dev.formatters.word.csv import format_all_csv_words
 
 
 def get_words_csv_response(params):
@@ -20,8 +21,10 @@ def get_words_csv_response(params):
         tags.append(params['tag_3'])
     if 'usually_kana' in params:
         usually_kana = eval(str(params['usually_kana']).capitalize())
-    df = DataFrame.from_dict(get_words_for_csv(collection, tags, usually_kana))
-    df = df.reindex(columns=['word', 'hiragana', 'spanish', 'sentence', 'translation'])
+    words = get_words_for_csv(collection, tags, usually_kana)
+    formatted_words = format_all_csv_words(words)
+    df = DataFrame.from_dict(formatted_words)
+    df = df.reindex(columns=['word', 'hiragana', 'spanish', 'type', 'tags', 'sentence', 'translation', 'notes'])
     if not df.empty:
         df.to_csv(f'./files/{file_name}.csv', index=False, header=False)
         return file_name
@@ -32,8 +35,10 @@ def get_jlpt_words_csv_response(params):
     usually_kana = True
     if 'usually_kana' in params:
         usually_kana = eval(str(params['usually_kana']).capitalize())
-    df = DataFrame.from_dict(get_jlpt_words_for_csv(usually_kana))
-    df = df.reindex(columns=['word', 'hiragana', 'spanish', 'sentence', 'translation'])
+    words = get_jlpt_words_for_csv(usually_kana)
+    formatted_words = format_all_csv_words(words)
+    df = DataFrame.from_dict(formatted_words)
+    df = df.reindex(columns=['word', 'hiragana', 'spanish', 'tags', 'sentence', 'translation', 'notes'])
     if not df.empty:
         df.to_csv(f'./files/jlpt.csv', index=False, header=False)
         return True

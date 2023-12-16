@@ -36,9 +36,11 @@ def get_words_for_csv(collection, tags, usually_kana):
             'word': word_projection,
             'hiragana': hiragana_projection,
             'spanish': 1,
+            'type': 1,
             'tags': 1,
             'sentence': {'$first': '$sentences.sentence'},
-            'translation': {'$first': '$sentences.translation'}
+            'translation': {'$first': '$sentences.translation'},
+            'notes': 1
         }
     })
     return words().aggregate(pipeline)
@@ -50,7 +52,7 @@ def get_jlpt_words_for_csv(usually_kana):
             '$or': [
                 {'group': 'jlpt_n2'},
                 {'group': 'jlpt_n1'},
-                {'tags.jlpt_n1': True}
+                {'tags': {'$all': ['jlpt_n1']}}
             ]
         }
     }]
@@ -66,9 +68,11 @@ def get_jlpt_words_for_csv(usually_kana):
             'word': word_projection,
             'hiragana': hiragana_projection,
             'spanish': 1,
+            'type': 1,
             'tags': 1,
             'sentence': {'$first': '$sentences.sentence'},
-            'translation': {'$first': '$sentences.translation'}
+            'translation': {'$first': '$sentences.translation'},
+            'notes': 1
         }
     })
     return words().aggregate(pipeline)
