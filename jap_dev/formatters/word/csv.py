@@ -23,7 +23,14 @@ def format_csv_word(word):
     if 'type' in word:
         formatted_word['type'] = format_type(word['type'])
     if 'tags' in word:
-        formatted_word['tags'] = ', '.join(word['tags'])
+        if 'common' in word['tags']:
+            formatted_word['common'] = True
+        if 'jlpt_n1' in word['tags']:
+            formatted_word['jlpt_n1'] = True
+        if 'expression' in word['tags']:
+            formatted_word['expression'] = True
+        if 'onomatopoeic' in word['tags']:
+            formatted_word['onomatopoeic'] = True
     return formatted_word
 
 

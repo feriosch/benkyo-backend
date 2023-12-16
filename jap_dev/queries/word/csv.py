@@ -3,14 +3,14 @@ from jap_dev.information import words
 projections = {
     'word': {
         '$cond': {
-            'if': {'$eq': ['$tags.usually_kana', True]},
+            'if': {'$in': ['usually_kana', {'$ifNull': ['$tags', []]}]},
             'then': '$hiragana',
             'else': '$word'
         }
     },
     'hiragana': {
         '$cond': {
-            'if': {'$eq': ['$tags.usually_kana', True]},
+            'if': {'$in': ['usually_kana', {'$ifNull': ['$tags', []]}]},
             'then': '',
             'else': '$hiragana'
         }
