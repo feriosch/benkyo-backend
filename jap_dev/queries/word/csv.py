@@ -23,10 +23,7 @@ def get_words_for_csv(collection, tags, usually_kana):
     if collection:
         pipeline.append({'$match': {'group': collection}})
     if tags:
-        tag_conditions = []
-        for tag in tags:
-            tag_conditions.append({'tags.{}'.format(tag): {'$exists': True}})
-        pipeline.append({'$match': {'$and': tag_conditions}})
+        pipeline.append({'$match': {'tags': {'$all': tags}}})
     if usually_kana:
         word_projection = projections['word']
         hiragana_projection = projections['hiragana']
@@ -39,6 +36,7 @@ def get_words_for_csv(collection, tags, usually_kana):
             'word': word_projection,
             'hiragana': hiragana_projection,
             'spanish': 1,
+            'tags': 1,
             'sentence': {'$first': '$sentences.sentence'},
             'translation': {'$first': '$sentences.translation'}
         }
@@ -68,6 +66,7 @@ def get_jlpt_words_for_csv(usually_kana):
             'word': word_projection,
             'hiragana': hiragana_projection,
             'spanish': 1,
+            'tags': 1,
             'sentence': {'$first': '$sentences.sentence'},
             'translation': {'$first': '$sentences.translation'}
         }
