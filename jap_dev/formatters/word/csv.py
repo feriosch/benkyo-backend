@@ -12,9 +12,12 @@ def format_type(word_type):
         'adv_noun': '副名',
         'counter': '回'
     }
+    teki_subtype = '的'
     for key, value in word_type.items():
         if value == 1 and key in japanese_subtypes:
             formatted_type.append(japanese_subtypes[key])
+        if value == 5 and key in japanese_subtypes:
+            formatted_type.append(japanese_subtypes[key] + teki_subtype)
     return '、'.join(formatted_type)
 
 
@@ -31,6 +34,10 @@ def format_csv_word(word):
             formatted_word['expression'] = True
         if 'onomatopoeic' in word['tags']:
             formatted_word['onomatopoeic'] = True
+        if 'transitive' in word['tags']:
+            formatted_word['transitive'] = True
+        if 'intransitive' in word['tags']:
+            formatted_word['intransitive'] = True
     return formatted_word
 
 
