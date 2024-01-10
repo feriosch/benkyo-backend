@@ -12,10 +12,13 @@ def format_type(word_type):
         'adv_noun': '副名',
         'counter': '回'
     }
+    to_subtype = 'と'
     teki_subtype = '的'
     for key, value in word_type.items():
         if value == 1 and key in japanese_subtypes:
             formatted_type.append(japanese_subtypes[key])
+        if value == 4 and key in japanese_subtypes:
+            formatted_type.append(japanese_subtypes[key] + to_subtype)
         if value == 5 and key in japanese_subtypes:
             formatted_type.append(japanese_subtypes[key] + teki_subtype)
     return '、'.join(formatted_type)
