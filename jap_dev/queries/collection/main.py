@@ -17,6 +17,12 @@ def get_collections(group, search_filter, page_size, page_number):
             }
         })
     collection_count = get_total_collections(pipeline)
+    pipeline.append({
+        '$sort': {
+            'group': 1,
+            'collection_name': 1
+        }
+    })
     if page_size:
         skips = page_size * (page_number - 1)
         pipeline.append({'$skip': skips})
