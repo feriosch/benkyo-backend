@@ -50,6 +50,7 @@ def get_jlpt_words_for_csv(usually_kana):
     pipeline = [{
         '$match': {
             '$or': [
+                {'group': 'jlpt_n3'},
                 {'group': 'jlpt_n2'},
                 {'group': 'jlpt_n1'},
                 {'tags': {'$all': ['jlpt_n1']}}
