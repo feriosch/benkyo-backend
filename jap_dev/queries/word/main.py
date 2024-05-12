@@ -15,10 +15,8 @@ def get_words(collection, tags, filter_by, order_field, order_direction, page_si
                 '$or': [
                     {'word': {'$regex': filter_by}},
                     {'hiragana': {'$regex': '^' + filter_by}},
-                    {'spanish': {
-                        '$regex': filter_by,
-                        '$options': 'i'
-                    }}
+                    {'spanish': {'$regex': fr'\b{filter_by}\w*', '$options': 'i'}},
+                    {'notes': {'$regex': fr'\b{filter_by}\w*', '$options': 'i'}},
                 ]
             }
         })
