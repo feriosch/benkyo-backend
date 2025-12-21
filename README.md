@@ -1,9 +1,11 @@
 # Benkyo Backend
+
 Server for Japanese Language Project
 
 ## Setup Instructions
 
 ### Prerequisites
+
 - Python 3.11+ (tested with Python 3.13)
 - pip
 - MongoDB database access
@@ -12,20 +14,24 @@ Server for Japanese Language Project
 ### Installation
 
 1. Create and activate a virtual environment:
-```bash
-python3 -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-```
+
+   ```bash
+   python3 -m venv .venv
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   ```
 
 2. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+
+   ```bash
+   pip install -r requirements.txt
+   ```
 
 3. Configure environment variables:
+
    - Create a `.env` file in the root directory
    - Add the following variables:
-   ```
+
+   ```text
    DB_USERNAME=your_mongodb_username
    DB_PASSWORD=your_mongodb_password
    DB_NAME=your_database_name
@@ -34,78 +40,85 @@ pip install -r requirements.txt
    ```
 
 4. Start the server:
-```bash
-PORT=5001 python application.py
-```
+
+   ```bash
+   PORT=5001 python application.py
+   ```
 
 The API will be available at `http://localhost:5001`
 
 ### Notes
+
 - On macOS, port 5000 is often used by AirPlay Receiver. Use port 5001 or another port for local development.
 - The backend requires Python 3.11+ due to compatibility requirements with updated dependencies (numpy, pandas, google-cloud-storage).
 - Make sure your MongoDB connection string and credentials are correctly configured in the `.env` file.
 
 ## API Requests
-#### Test Request
-----
 
-* ##### URL
+### Test Request
 
-  /test
+---
 
-* **Method:**
+- **URL**
+
+  `/test`
+
+- **Method:**
 
   `GET`
 
-*  **URL Params**
+- **URL Params**
 
-   **Required:**
+  **Required:**
 
-   `test=[string]`
-   `test_int=[integer]`
+  `test=[string]`
+  `test_int=[integer]`
 
-* **Success Response:**
+- **Success Response:**
 
-  * **Code:** 200 <br />
+  - **Code:** 200
     **Content:** `"Hola"`
 
-* **Error Response:**
+- **Error Response:**
 
-  * **Code:** 401 UNAUTHORIZED <br />
+  - **Code:** 401 UNAUTHORIZED
     **Content:** `{error: "Missing JWT"}`
 
-* **Sample Call:**
+- **Sample Call:**
 
   `localhost:5001/test?test=hola&test_int=5`
 
-* **Notes:**
+- **Notes:**
 
-  This endpoint needs an Authorization header with a valid JWT 
-----
+  This endpoint needs an Authorization header with a valid JWT
 
-#### Login
-----
+---
 
-* ##### URL
+### Login
 
-  /login
+---
 
-* **Method:**
+- **URL**
+
+  `/login`
+
+- **Method:**
 
   `POST`
 
-*  **URL Params**
+- **URL Params**
 
-   **Required:**
+  **Required:**
 
-   `username=[string]`
-   `password=[string]`
+  `username=[string]`
+  `password=[string]`
 
-* **Success Response:**
+- **Success Response:**
 
-  * **Code:** 200 <br />
-    **Content:** 
-    ```
+  - **Code:** 200
+    **Content:**
+
+    ```json
     {
         "exp": 1583660993,
         "id": "5e5de203d5cee6f169926cc4",
@@ -116,59 +129,62 @@ The API will be available at `http://localhost:5001`
      }
      ```
 
-* **Error Response:**
+- **Error Response:**
 
-  * **Code:** 400 BAD REQUEST <br />
+  - **Code:** 400 BAD REQUEST
     **Content:** `{error: "Wrong username or password"}`
 
-* **Sample Call:**
+- **Sample Call:**
 
   `localhost:5001/login?password=<password>&username=Victor346`
 
-* **Notes:**
-The response contains all the available info from the user (not only the one presented in the example). The jwt parameter returned can be used to authenticate all the following requests.
-----
+- **Notes:**
 
-  #### User Creation
-----
+  The response contains all the available info from the user (not only the one presented in the example). The jwt parameter returned can be used to authenticate all the following requests.
 
-* ##### URL
+---
 
-  /users
+### User Creation
 
-* **Method:**
+---
+
+- **URL**
+
+  `/users`
+
+- **Method:**
 
   `POST`
 
-*  **URL Params**
+- **URL Params**
 
-   **Required:**
+  **Required:**
 
-   `username=[string]`<br/>
-   `password=[string]`<br/>
-   `type=["admin", "regular"]`<br/>
-   `profile=["seeker", "survivor", "daredevil", "mastermind", "conqueror", "socializer", "achiever"]`<br/>
+  `username=[string]`
+  `password=[string]`
+  `type=["admin", "regular"]`
+  `profile=["seeker", "survivor", "daredevil", "mastermind", "conqueror", "socializer", "achiever"]`
 
-* **Success Response:**
+- **Success Response:**
 
-  * **Code:** 200 <br />
-    **Content:** 
-    ```
+  - **Code:** 200
+    **Content:**
+
+    ```json
     {
         "id": "5e5de203d5cee6f169926cc4"
     }
     ```
 
-* **Error Response:**
+- **Error Response:**
 
-  * **Code:** 400 BAD REQUEST <br />
+  - **Code:** 400 BAD REQUEST
     **Content:** `{error: "Username already exists"}`
 
-* **Sample Call:**
+- **Sample Call:**
 
   `localhost:5001/users?username=Victor346&password=<password>&type=admin&profile=achiever`
 
-* **Notes:**
+- **Notes:**
 
-This endpoint is only for development purposes, the user creation process will change.
-
+  This endpoint is only for development purposes, the user creation process will change.
