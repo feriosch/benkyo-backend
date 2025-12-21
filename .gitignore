@@ -8,3 +8,6 @@
 
 debug.py
 component_dictionary.py
+
+# Data
+vocabulary.words.json
