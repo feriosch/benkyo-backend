@@ -29,7 +29,8 @@ def format_word(word, related_words=None):
             rel_entry = {
                 'wordId': str(rel['wordId']),
                 'type': rel.get('type', 'related'),
-                'note': rel.get('note', '')
+                'note': rel.get('note', ''),
+                'tags': rel.get('tags', [])
             }
             # If we have the related word details, include them
             if related_words and str(rel['wordId']) in related_words:
