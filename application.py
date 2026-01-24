@@ -39,6 +39,8 @@ add_rule('/collections/search', views['collection']['search'], ['GET'])
 
 add_rule('/words', views['word']['main'], ['GET', 'POST', 'PUT', 'DELETE'])
 add_rule('/words/search', views['word']['search'], ['GET'])
+add_rule('/words/<word_id>/related', views['word']['related'], ['POST'])
+add_rule('/words/<word_id>/related/<related_word_id>', views['word']['related'], ['DELETE'])
 add_rule('/words/csv', views['word']['csv']['main'], ['GET'])
 add_rule('/words/csv/jlpt', views['word']['csv']['jlpt'], ['GET'])
 
