@@ -1,4 +1,12 @@
-def format_word(word):
+def format_word(word, related_words=None):
+    """
+    Format a word document for API response.
+    
+    Args:
+        word: The word document from MongoDB
+        related_words: Optional dict mapping ObjectId strings to word documents
+                      for populating related word details
+    """
     formatted_word = {
         'id': str(word['_id']),
         'word': word['word'],
@@ -13,6 +21,25 @@ def format_word(word):
         formatted_word['tags'] = word['tags']
     if 'notes' in word:
         formatted_word['notes'] = word['notes']
+    
+    # Format related words if present
+    if 'related' in word and word['related']:
+        formatted_related = []
+        for rel in word['related']:
+            rel_entry = {
+                'wordId': str(rel['wordId']),
+                'type': rel.get('type', 'related'),
+                'note': rel.get('note', '')
+            }
+            # If we have the related word details, include them
+            if related_words and str(rel['wordId']) in related_words:
+                related_doc = related_words[str(rel['wordId'])]
+                rel_entry['word'] = related_doc.get('word', '')
+                rel_entry['hiragana'] = related_doc.get('hiragana', '')
+                rel_entry['spanish'] = related_doc.get('spanish', '')
+            formatted_related.append(rel_entry)
+        formatted_word['related'] = formatted_related
+    
     return formatted_word
 
 

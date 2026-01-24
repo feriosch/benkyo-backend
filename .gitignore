@@ -10,4 +10,7 @@ debug.py
 component_dictionary.py
 
 # Data
-vocabulary.words.json
+snapshots/
+
+# Relationship migration scripts
+scripts/
