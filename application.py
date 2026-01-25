@@ -6,7 +6,7 @@ from jap_dev.helpers.exceptions import BadRequestException, UnauthorizedExceptio
 from jap_dev.views.views import views
 
 application = Flask(__name__)
-CORS(application)
+CORS(application, origins="*", allow_headers=["Content-Type", "Authorization"], methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"])
 
 
 @application.route("/")
@@ -59,8 +59,5 @@ def handle_bad_request(e):
 
 
 if __name__ == '__main__':
-    try:
-        port = os.getenv('PORT')
-    except NameError:
-        port = 80
+    port = int(os.getenv('PORT', 80))
     application.run(host='0.0.0.0', port=port)
