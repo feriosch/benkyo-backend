@@ -1,6 +1,14 @@
 # Benkyo Backend
 
-Server for Japanese Language Project
+REST API server for the Benkyo Japanese Language Learning application.
+
+## Tech Stack
+
+- **Framework:** Flask 2.1
+- **Database:** MongoDB Atlas
+- **Authentication:** JWT (PyJWT)
+- **Storage:** Google Cloud Storage
+- **Password Hashing:** Argon2
 
 ## Setup Instructions
 
@@ -8,183 +16,230 @@ Server for Japanese Language Project
 
 - Python 3.11+ (tested with Python 3.13)
 - pip
-- MongoDB database access
-- Google Cloud Storage credentials (for file storage)
+- MongoDB Atlas account
+- Google Cloud Storage credentials (for file uploads)
 
 ### Installation
 
-1. Create and activate a virtual environment:
+1. **Clone and create virtual environment:**
 
    ```bash
+   git clone <repository-url>
+   cd benkyo-backend
    python3 -m venv .venv
    source .venv/bin/activate  # On Windows: .venv\Scripts\activate
    ```
 
-2. Install dependencies:
+2. **Install dependencies:**
 
    ```bash
    pip install -r requirements.txt
    ```
 
-3. Configure environment variables:
+3. **Configure environment variables:**
 
-   - Create a `.env` file in the root directory
-   - Add the following variables:
+   Create a `.env` file in the root directory:
 
-   ```text
+   ```env
    DB_USERNAME=your_mongodb_username
    DB_PASSWORD=your_mongodb_password
    DB_NAME=your_database_name
    TOKEN_PASS=your_jwt_secret_key
-   PORT=5001  # Optional, defaults to 80
+   PORT=5001
    ```
 
-4. Start the server:
+4. **Start the server:**
 
    ```bash
-   PORT=5001 python application.py
+   python application.py
    ```
 
-The API will be available at `http://localhost:5001`
+   The API will be available at `http://localhost:5001`
 
 ### Notes
 
-- On macOS, port 5000 is often used by AirPlay Receiver. Use port 5001 or another port for local development.
-- The backend requires Python 3.11+ due to compatibility requirements with updated dependencies (numpy, pandas, google-cloud-storage).
-- Make sure your MongoDB connection string and credentials are correctly configured in the `.env` file.
+- On macOS, port 5000 is used by AirPlay Receiver. Use port 5001 instead.
+- Ensure MongoDB credentials are URL-encoded if they contain special characters.
 
-## API Requests
+## Project Structure
 
-### Test Request
+```
+benkyo-backend/
+├── application.py          # Flask app entry point & route definitions
+├── jap_dev/
+│   ├── formatters/         # Response data formatters
+│   ├── helpers/            # Authentication, DB connection, utilities
+│   ├── queries/            # Database query functions
+│   ├── responses/          # API response builders
+│   ├── schemas/            # Request validation schemas
+│   └── views/              # Route handlers (controllers)
+├── requirements.txt
+└── wsgi.py                 # WSGI entry point for production
+```
 
----
+## API Reference
 
-- **URL**
+All endpoints (except `/login` and `/`) require a valid JWT token in the `Authorization` header.
 
-  `/test`
+### Health Check
 
-- **Method:**
-
-  `GET`
-
-- **URL Params**
-
-  **Required:**
-
-  `test=[string]`
-  `test_int=[integer]`
-
-- **Success Response:**
-
-  - **Code:** 200
-    **Content:** `"Hola"`
-
-- **Error Response:**
-
-  - **Code:** 401 UNAUTHORIZED
-    **Content:** `{error: "Missing JWT"}`
-
-- **Sample Call:**
-
-  `localhost:5001/test?test=hola&test_int=5`
-
-- **Notes:**
-
-  This endpoint needs an Authorization header with a valid JWT
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/` | Returns `{"status": "ok"}` |
 
 ---
 
-### Login
+### Authentication
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/login` | Authenticate user and get JWT |
+| GET | `/session` | Validate current session |
+| GET | `/users` | Get user info |
+| POST | `/users` | Create new user |
+
+#### POST `/login`
+
+**Request Body:**
+```json
+{
+  "username": "string",
+  "password": "string"
+}
+```
+
+**Response:**
+```json
+{
+  "id": "user_id",
+  "username": "string",
+  "type": "admin|regular",
+  "jwt": "token_string",
+  "exp": 1234567890
+}
+```
 
 ---
 
-- **URL**
+### Words (Vocabulary)
 
-  `/login`
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/words` | List words with pagination & filtering |
+| POST | `/words` | Create a new word |
+| PUT | `/words` | Update a word |
+| DELETE | `/words` | Delete a word |
+| GET | `/words/search` | Search for a specific word |
+| POST | `/words/<word_id>/related` | Add a related word relationship |
+| DELETE | `/words/<word_id>/related/<related_word_id>` | Remove a relationship |
+| GET | `/words/csv` | Export words as CSV |
+| GET | `/words/csv/jlpt` | Export JLPT words as CSV |
 
-- **Method:**
+#### GET `/words`
 
-  `POST`
+**Query Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `group` | string | Filter by collection (e.g., `jlpt_n3`) |
+| `filter_by` | string | Search term |
+| `page_size` | integer | Results per page |
+| `page_number` | integer | Page number |
+| `order_field` | string | Field to sort by |
+| `order_direction` | string | `asc` or `desc` |
 
-- **URL Params**
+#### GET `/words/search`
 
-  **Required:**
+**Query Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `word` | string | Search by word text |
+| `word_id` | string | Search by word ID |
+| `group` | string | Get random word from collection |
 
-  `username=[string]`
-  `password=[string]`
+#### POST `/words/<word_id>/related`
 
-- **Success Response:**
+**Request Body:**
+```json
+{
+  "relatedWordId": "string",
+  "type": "related|synonym|antonym",
+  "tags": ["formal", "casual", "spoken", "written"],
+  "note": "optional note"
+}
+```
 
-  - **Code:** 200
-    **Content:**
-
-    ```json
-    {
-        "exp": 1583660993,
-        "id": "5e5de203d5cee6f169926cc4",
-        "jwt": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlZpY3RvcjM0NiIsInR5cGUiOiJhZG1pbiIsInByb2ZpbGUiOiJhY2hpZXZlciIsImlkIjoiNWU1ZGUyMDNkNWNlZTZmMTY5OTI2Y2M0IiwiZXhwIjoxNTgzNjYwOTkzfQ.0_CGLZrMPY2eOIPS-QrwtvmfTCLiXRfqYMb6I3sly88",
-        "profile": "achiever",
-        "type": "admin",
-        "username": "Victor346"
-     }
-     ```
-
-- **Error Response:**
-
-  - **Code:** 400 BAD REQUEST
-    **Content:** `{error: "Wrong username or password"}`
-
-- **Sample Call:**
-
-  `localhost:5001/login?password=<password>&username=Victor346`
-
-- **Notes:**
-
-  The response contains all the available info from the user (not only the one presented in the example). The jwt parameter returned can be used to authenticate all the following requests.
+Creates a bidirectional relationship between two words.
 
 ---
 
-### User Creation
+### Kanji
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/kanjis` | List kanji with pagination |
+| POST | `/kanjis` | Create a new kanji |
+| PUT | `/kanjis` | Update a kanji |
+| GET | `/kanjis/search` | Search for a specific kanji |
+| GET | `/kanjis/exists` | Check if kanji exists |
+| GET | `/kanjis/csv` | Export kanji as CSV |
+| GET | `/kanjis/components` | Get kanji components |
+| GET | `/kanjis/components/irregular` | Get irregular components |
+| POST | `/kanjis/components/irregular` | Add irregular component |
+| GET | `/kanjis/radicals` | Get kanji radicals |
 
 ---
 
-- **URL**
+### Collections
 
-  `/users`
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/collections` | List all collections |
+| POST | `/collections` | Create a new collection |
+| GET | `/collections/search` | Search for a collection |
 
-- **Method:**
+---
 
-  `POST`
+### Grammar (Clauses)
 
-- **URL Params**
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/clauses` | List grammar clauses |
+| POST | `/clauses` | Create a new clause |
+| PUT | `/clauses` | Update a clause |
+| DELETE | `/clauses` | Delete a clause |
+| GET | `/clauses/search` | Search for a clause |
 
-  **Required:**
+---
 
-  `username=[string]`
-  `password=[string]`
-  `type=["admin", "regular"]`
-  `profile=["seeker", "survivor", "daredevil", "mastermind", "conqueror", "socializer", "achiever"]`
+## Error Responses
 
-- **Success Response:**
+All errors follow this format:
 
-  - **Code:** 200
-    **Content:**
+```json
+{
+  "error": "Error message description"
+}
+```
 
-    ```json
-    {
-        "id": "5e5de203d5cee6f169926cc4"
-    }
-    ```
+| Code | Description |
+|------|-------------|
+| 400 | Bad Request - Invalid parameters |
+| 401 | Unauthorized - Missing or invalid JWT |
+| 404 | Not Found - Resource doesn't exist |
 
-- **Error Response:**
+## Development
 
-  - **Code:** 400 BAD REQUEST
-    **Content:** `{error: "Username already exists"}`
+### Running with Docker
 
-- **Sample Call:**
+```bash
+docker build -t benkyo-backend .
+docker run -p 5001:5001 --env-file .env benkyo-backend
+```
 
-  `localhost:5001/users?username=Victor346&password=<password>&type=admin&profile=achiever`
+### Database Snapshots
 
-- **Notes:**
+Database snapshots are stored in `/snapshots/` for backup purposes.
 
-  This endpoint is only for development purposes, the user creation process will change.
+### Scripts
+
+Utility scripts are in `/scripts/` (gitignored) for data migrations and analysis.
