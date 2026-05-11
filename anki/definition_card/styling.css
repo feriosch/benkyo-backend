@@ -1,0 +1,61 @@
+.card {
+    font-family: arial;
+    font-size: 64px;
+    text-align: center;
+    color: black;
+    background-color: white;
+   }
+   
+   .spanish {
+       font-size: 54px;
+   }
+   
+   .type {
+     font-size: 42px;
+   }
+   
+   .tags {
+       margin-bottom: 1rem;
+   }
+   
+   .tag {
+       font-size: 24px;
+       padding: 0.5rem 1rem;
+       border-radius: 1rem;
+       color: white;
+        text-align: center;
+   }
+   
+   .success {
+       background-color: hsl(153, 53%,  53%);
+   }
+   
+   .info {
+       background-color: hsl(207, 61%,  53%);
+   }
+   
+   .danger {
+       background-color:hsl(348, 86%, 61%);
+   }
+   
+   .link {
+       background-color:hsl(217, 71%, 53%);
+   }
+   
+   .word {
+       font-size: 64px;
+   }
+   
+   .hiragana {
+       font-size: 48px;
+   }
+   
+   .sentences {
+        text-align: left;
+       font-size: 32px;
+   }
+   
+   .notes {
+     font-size: 36px;
+   }
+   
