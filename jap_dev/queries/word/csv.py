@@ -18,12 +18,24 @@ projections = {
 }
 
 
+related_lookup = {
+    '$lookup': {
+        'from': 'words',
+        'localField': 'related.wordId',
+        'foreignField': '_id',
+        'as': '_relatedWords',
+        'pipeline': [{'$project': {'word': 1, 'hiragana': 1}}]
+    }
+}
+
+
 def get_words_for_csv(collection, tags, usually_kana):
     pipeline = []
     if collection:
         pipeline.append({'$match': {'group': collection}})
     if tags:
         pipeline.append({'$match': {'tags': {'$all': tags}}})
+    pipeline.append(related_lookup)
     if usually_kana:
         word_projection = projections['word']
         hiragana_projection = projections['hiragana']
@@ -40,7 +52,9 @@ def get_words_for_csv(collection, tags, usually_kana):
             'tags': 1,
             'sentence': {'$first': '$sentences.sentence'},
             'translation': {'$first': '$sentences.translation'},
-            'notes': 1
+            'notes': 1,
+            'related': 1,
+            '_relatedWords': 1
         }
     })
     return words().aggregate(pipeline)
@@ -57,6 +71,7 @@ def get_jlpt_words_for_csv(usually_kana):
             ]
         }
     }]
+    pipeline.append(related_lookup)
     if usually_kana:
         word_projection = projections['word']
         hiragana_projection = projections['hiragana']
@@ -73,7 +88,9 @@ def get_jlpt_words_for_csv(usually_kana):
             'tags': 1,
             'sentence': {'$first': '$sentences.sentence'},
             'translation': {'$first': '$sentences.translation'},
-            'notes': 1
+            'notes': 1,
+            'related': 1,
+            '_relatedWords': 1
         }
     })
     return words().aggregate(pipeline)

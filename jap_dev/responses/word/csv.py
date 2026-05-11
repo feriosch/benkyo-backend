@@ -5,7 +5,7 @@ from jap_dev.formatters.word.csv import format_all_csv_words
 
 csv_columns = [
     'word', 'hiragana', 'spanish', 'type', 'notes', 'sentence', 'translation', 'common', 'jlpt_n1', 'expression',
-    'onomatopoeic', 'transitive', 'intransitive'
+    'onomatopoeic', 'transitive', 'intransitive', 'related_html'
 ]
 
 

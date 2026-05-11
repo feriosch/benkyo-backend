@@ -1,0 +1,113 @@
+.card {
+  font-family: arial;
+  font-size: 64px;
+  text-align: center;
+  color: black;
+  background-color: white;
+}
+
+.spanish {
+  font-size: 54px;
+}
+
+.type {
+  font-size: 42px;
+}
+
+.tags {
+  margin-bottom: 1rem;
+}
+
+.tag {
+  font-size: 24px;
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+  color: white;
+  text-align: center;
+}
+
+.success {
+  background-color: hsl(153, 53%, 53%);
+}
+
+.info {
+  background-color: hsl(207, 61%, 53%);
+}
+
+.danger {
+  background-color: hsl(348, 86%, 61%);
+}
+
+.link {
+  background-color: hsl(217, 71%, 53%);
+}
+
+.word {
+  font-size: 64px;
+}
+
+.hiragana {
+  font-size: 48px;
+}
+
+.sentences {
+  text-align: left;
+  font-size: 32px;
+}
+
+.notes {
+  font-size: 36px;
+}
+
+.related {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.rel-pill {
+  display: inline-block;
+  font-size: 26px;
+  padding: 0.3rem 0.8rem;
+  border-radius: 1.2rem;
+  color: white;
+  white-space: nowrap;
+}
+
+.rel-pill.formal {
+  background-color: hsl(43, 80%, 50%);
+}
+
+.rel-pill.casual {
+  background-color: hsl(210, 60%, 55%);
+}
+
+.rel-pill.literary {
+  background-color: hsl(270, 50%, 55%);
+}
+
+.rel-pill.technical {
+  background-color: hsl(25, 75%, 55%);
+}
+
+.rel-pill.archaic {
+  background-color: hsl(0, 0%, 55%);
+}
+
+.rel-pill.spoken {
+  background-color: hsl(175, 50%, 45%);
+}
+
+.rel-pill.syn {
+  background-color: hsl(153, 53%, 53%);
+}
+
+.rel-pill.ant {
+  background-color: hsl(348, 70%, 55%);
+}
+
+.rel-pill.rel-default {
+  background-color: hsl(215, 25%, 55%);
+}

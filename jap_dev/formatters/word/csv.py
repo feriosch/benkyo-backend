@@ -1,3 +1,76 @@
+import re
+
+
+TYPE_PREFIXES = {'synonym': '=', 'antonym': '✕', 'related': '~'}
+
+NUANCE_CSS_CLASS = {
+    'formal': 'formal',
+    'casual': 'casual',
+    'literary': 'literary',
+    'technical': 'technical',
+    'archaic': 'archaic',
+    'spoken': 'spoken',
+    'polite': 'formal',
+    'written': 'literary',
+    'slang': 'casual',
+}
+
+DEFAULT_TYPE_CLASS = {
+    'synonym': 'syn',
+    'antonym': 'ant',
+    'related': 'rel-default',
+}
+
+REL_NOTE_PATTERNS = [
+    r'rel:\s*[^;]+(?:;|$)',
+    r'sinonimo:\s*[^;]+(?:;|$)',
+    r'antonimo:\s*[^;]+(?:;|$)',
+]
+
+
+def format_related(word):
+    related = word.get('related', [])
+    lookup = word.get('_relatedWords', [])
+    if not related:
+        return ''
+
+    word_map = {}
+    for w in lookup:
+        oid = str(w['_id'])
+        word_map[oid] = w.get('word') or w.get('hiragana', '?')
+
+    pills = []
+    for rel in related:
+        word_id = str(rel['wordId'])
+        rel_word = word_map.get(word_id, '')
+        if not rel_word:
+            continue
+
+        rel_type = rel.get('type', 'related')
+        nuance_tags = rel.get('tags', [])
+        prefix = TYPE_PREFIXES.get(rel_type, '~')
+
+        if nuance_tags:
+            css_class = NUANCE_CSS_CLASS.get(nuance_tags[0], DEFAULT_TYPE_CLASS.get(rel_type, 'rel-default'))
+        else:
+            css_class = DEFAULT_TYPE_CLASS.get(rel_type, 'rel-default')
+
+        pills.append(f'<span class="rel-pill {css_class}">{prefix} {rel_word}</span>')
+
+    return ' '.join(pills)
+
+
+def clean_notes(notes):
+    if not notes:
+        return notes
+    cleaned = notes
+    for pattern in REL_NOTE_PATTERNS:
+        cleaned = re.sub(pattern, '', cleaned, flags=re.IGNORECASE)
+    cleaned = re.sub(r'^[;,\s]+|[;,\s]+$', '', cleaned)
+    cleaned = re.sub(r'\s*;\s*$', '', cleaned)
+    return cleaned.strip()
+
+
 def format_type(word_type):
     formatted_type = []
     japanese_subtypes = {
@@ -41,6 +114,12 @@ def format_csv_word(word):
             formatted_word['transitive'] = True
         if 'intransitive' in word['tags']:
             formatted_word['intransitive'] = True
+
+    formatted_word['related_html'] = format_related(word)
+    formatted_word['notes'] = clean_notes(word.get('notes', ''))
+    formatted_word.pop('related', None)
+    formatted_word.pop('_relatedWords', None)
+
     return formatted_word
 
 
