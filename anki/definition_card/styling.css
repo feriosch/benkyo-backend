@@ -111,3 +111,8 @@
 .rel-pill.rel-default {
   background-color: hsl(215, 25%, 55%);
 }
+
+.rel-level {
+  font-size: 0.7em;
+  opacity: 0.85;
+}

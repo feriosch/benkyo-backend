@@ -26,18 +26,26 @@ def format_word(word, related_words=None):
     if 'related' in word and word['related']:
         formatted_related = []
         for rel in word['related']:
-            rel_entry = {
-                'wordId': str(rel['wordId']),
-                'type': rel.get('type', 'related'),
-                'note': rel.get('note', ''),
-                'tags': rel.get('tags', [])
-            }
-            # If we have the related word details, include them
-            if related_words and str(rel['wordId']) in related_words:
-                related_doc = related_words[str(rel['wordId'])]
-                rel_entry['word'] = related_doc.get('word', '')
-                rel_entry['hiragana'] = related_doc.get('hiragana', '')
-                rel_entry['spanish'] = related_doc.get('spanish', '')
+            if 'wordId' in rel:
+                rel_entry = {
+                    'wordId': str(rel['wordId']),
+                    'type': rel.get('type', 'related'),
+                    'note': rel.get('note', ''),
+                    'tags': rel.get('tags', [])
+                }
+                if related_words and str(rel['wordId']) in related_words:
+                    related_doc = related_words[str(rel['wordId'])]
+                    rel_entry['word'] = related_doc.get('word', '')
+                    rel_entry['hiragana'] = related_doc.get('hiragana', '')
+                    rel_entry['spanish'] = related_doc.get('spanish', '')
+            else:
+                rel_entry = {
+                    'word': rel.get('word', ''),
+                    'type': rel.get('type', 'related'),
+                    'note': rel.get('note', ''),
+                    'tags': rel.get('tags', []),
+                    'isBasic': True
+                }
             formatted_related.append(rel_entry)
         formatted_word['related'] = formatted_related
     

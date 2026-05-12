@@ -24,7 +24,7 @@ related_lookup = {
         'localField': 'related.wordId',
         'foreignField': '_id',
         'as': '_relatedWords',
-        'pipeline': [{'$project': {'word': 1, 'hiragana': 1}}]
+        'pipeline': [{'$project': {'word': 1, 'hiragana': 1, 'group': 1}}]
     }
 }
 
