@@ -61,58 +61,21 @@
 
 .related {
   margin-top: 1rem;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.4rem;
 }
 
-.rel-pill {
-  display: inline-block;
-  font-size: 26px;
-  padding: 0.3rem 0.8rem;
-  border-radius: 1.2rem;
-  color: white;
-  white-space: nowrap;
+.related-list {
+  text-align: left;
+  font-size: 28px;
+  color: #555;
+  padding-left: 1.5em;
+  margin: 0;
 }
 
-.rel-pill.formal {
-  background-color: hsl(43, 80%, 50%);
-}
-
-.rel-pill.casual {
-  background-color: hsl(210, 60%, 55%);
-}
-
-.rel-pill.literary {
-  background-color: hsl(270, 50%, 55%);
-}
-
-.rel-pill.technical {
-  background-color: hsl(25, 75%, 55%);
-}
-
-.rel-pill.archaic {
-  background-color: hsl(0, 0%, 55%);
-}
-
-.rel-pill.spoken {
-  background-color: hsl(175, 50%, 45%);
-}
-
-.rel-pill.syn {
-  background-color: hsl(153, 53%, 53%);
-}
-
-.rel-pill.ant {
-  background-color: hsl(348, 70%, 55%);
-}
-
-.rel-pill.rel-default {
-  background-color: hsl(215, 25%, 55%);
+.related-list li {
+  margin-bottom: 0.2em;
 }
 
 .rel-level {
-  font-size: 0.7em;
-  opacity: 0.85;
+  font-size: 0.75em;
+  color: #999;
 }

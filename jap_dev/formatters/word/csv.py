@@ -72,11 +72,13 @@ def format_related(word):
             css_class = DEFAULT_TYPE_CLASS.get(rel_type, 'rel-default')
 
         label = f'{prefix} {rel_word}'
+        if nuance_tags:
+            label += f' ({", ".join(nuance_tags)})'
         if jlpt_label:
             label += f' <span class="rel-level">{jlpt_label}</span>'
-        pills.append(f'<span class="rel-pill {css_class}">{label}</span>')
+        pills.append(f'<li>{label}</li>')
 
-    return ' '.join(pills)
+    return '<ul class="related-list">' + ''.join(pills) + '</ul>'
 
 
 def clean_notes(notes):
