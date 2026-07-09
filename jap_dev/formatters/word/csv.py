@@ -1,4 +1,5 @@
 import re
+import unicodedata
 
 
 TYPE_PREFIXES = {'synonym': '=', 'antonym': '✕', 'related': '~'}
@@ -9,36 +10,46 @@ JLPT_LABELS = {
     'jlpt_n3': 'N3',
 }
 
-NUANCE_CSS_CLASS = {
-    'formal': 'formal',
-    'casual': 'casual',
-    'literary': 'literary',
-    'technical': 'technical',
-    'archaic': 'archaic',
-    'spoken': 'spoken',
-    'polite': 'formal',
-    'written': 'literary',
-    'slang': 'casual',
-}
-
-DEFAULT_TYPE_CLASS = {
-    'synonym': 'syn',
-    'antonym': 'ant',
-    'related': 'rel-default',
-}
-
 REL_NOTE_PATTERNS = [
     r'rel:\s*[^;]+(?:;|$)',
     r'sinonimo:\s*[^;]+(?:;|$)',
     r'antonimo:\s*[^;]+(?:;|$)',
 ]
 
+MASK_CHAR = '■'
+
+
+def _is_kanji(ch):
+    cp = ord(ch)
+    return (0x4E00 <= cp <= 0x9FFF or
+            0x3400 <= cp <= 0x4DBF or
+            0x20000 <= cp <= 0x2A6DF)
+
+
+def _mask_shared_kanji(rel_word, target_word):
+    target_kanji = {ch for ch in target_word if _is_kanji(ch)}
+    if not target_kanji:
+        return rel_word
+    return ''.join(MASK_CHAR if (ch in target_kanji and _is_kanji(ch)) else ch for ch in rel_word)
+
+
+def _build_item(prefix, rel_word, nuance_tags, jlpt_label):
+    label = f'{prefix} {rel_word}'
+    if nuance_tags:
+        label += f' ({", ".join(nuance_tags)})'
+    if jlpt_label:
+        label += f' <span class="rel-level">{jlpt_label}</span>'
+    return f'<li>{label}</li>'
+
 
 def format_related(word):
+    """Returns (masked_html, full_html) for front/back of Anki cards."""
     related = word.get('related', [])
     lookup = word.get('_relatedWords', [])
     if not related:
-        return ''
+        return '', ''
+
+    target_word = word.get('word', '')
 
     word_map = {}
     for w in lookup:
@@ -48,7 +59,8 @@ def format_related(word):
             'group': w.get('group', ''),
         }
 
-    pills = []
+    front_items = []
+    back_items = []
     for rel in related:
         word_id = str(rel.get('wordId', ''))
         entry = word_map.get(word_id)
@@ -66,19 +78,13 @@ def format_related(word):
         nuance_tags = rel.get('tags', [])
         prefix = TYPE_PREFIXES.get(rel_type, '~')
 
-        if nuance_tags:
-            css_class = NUANCE_CSS_CLASS.get(nuance_tags[0], DEFAULT_TYPE_CLASS.get(rel_type, 'rel-default'))
-        else:
-            css_class = DEFAULT_TYPE_CLASS.get(rel_type, 'rel-default')
+        back_items.append(_build_item(prefix, rel_word, nuance_tags, jlpt_label))
 
-        label = f'{prefix} {rel_word}'
-        if nuance_tags:
-            label += f' ({", ".join(nuance_tags)})'
-        if jlpt_label:
-            label += f' <span class="rel-level">{jlpt_label}</span>'
-        pills.append(f'<li>{label}</li>')
+        masked_word = _mask_shared_kanji(rel_word, target_word)
+        front_items.append(_build_item(prefix, masked_word, nuance_tags, jlpt_label))
 
-    return '<ul class="related-list">' + ''.join(pills) + '</ul>'
+    wrap = lambda items: '<ul class="related-list">' + ''.join(items) + '</ul>'
+    return wrap(front_items), wrap(back_items)
 
 
 def clean_notes(notes):
@@ -136,7 +142,9 @@ def format_csv_word(word):
         if 'intransitive' in word['tags']:
             formatted_word['intransitive'] = True
 
-    formatted_word['related_html'] = format_related(word)
+    related_front, related_back = format_related(word)
+    formatted_word['related_front'] = related_front
+    formatted_word['related_back'] = related_back
     formatted_word['notes'] = clean_notes(word.get('notes', ''))
     formatted_word.pop('related', None)
     formatted_word.pop('_relatedWords', None)
