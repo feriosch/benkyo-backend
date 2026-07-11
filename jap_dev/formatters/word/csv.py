@@ -33,12 +33,14 @@ def _mask_shared_kanji(rel_word, target_word):
     return ''.join(MASK_CHAR if (ch in target_kanji and _is_kanji(ch)) else ch for ch in rel_word)
 
 
-def _build_item(prefix, rel_word, nuance_tags, jlpt_label):
+def _build_item(prefix, rel_word, nuance_tags, jlpt_label, note=None):
     label = f'{prefix} {rel_word}'
     if nuance_tags:
         label += f' ({", ".join(nuance_tags)})'
     if jlpt_label:
         label += f' <span class="rel-level">{jlpt_label}</span>'
+    if note:
+        label += f' <span class="rel-note">{note}</span>'
     return f'<li>{label}</li>'
 
 
@@ -76,9 +78,12 @@ def format_related(word):
 
         rel_type = rel.get('type', 'related')
         nuance_tags = rel.get('tags', [])
+        note = rel.get('note', '')
         prefix = TYPE_PREFIXES.get(rel_type, '~')
 
-        back_items.append(_build_item(prefix, rel_word, nuance_tags, jlpt_label))
+        # The back of the card also shows the free-text nuance note (usage
+        # preferences, register, position) for reference; the front stays clean.
+        back_items.append(_build_item(prefix, rel_word, nuance_tags, jlpt_label, note))
 
         masked_word = _mask_shared_kanji(rel_word, target_word)
         front_items.append(_build_item(prefix, masked_word, nuance_tags, jlpt_label))
