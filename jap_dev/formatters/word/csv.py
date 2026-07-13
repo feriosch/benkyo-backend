@@ -33,15 +33,21 @@ def _mask_shared_kanji(rel_word, target_word):
     return ''.join(MASK_CHAR if (ch in target_kanji and _is_kanji(ch)) else ch for ch in rel_word)
 
 
-def _build_item(prefix, rel_word, nuance_tags, jlpt_label, note=None):
-    label = f'{prefix} {rel_word}'
+def _build_item(prefix, rel_word, nuance_tags, jlpt_label, note=None, rel_type='related'):
+    level_html = f'<span class="rel-level">{jlpt_label}</span>' if jlpt_label else ''
+    tags_html = ''
     if nuance_tags:
-        label += f' ({", ".join(nuance_tags)})'
-    if jlpt_label:
-        label += f' <span class="rel-level">{jlpt_label}</span>'
-    if note:
-        label += f' <span class="rel-note">{note}</span>'
-    return f'<li>{label}</li>'
+        tags_html = ''.join(f'<span class="rel-tag">{tag}</span>' for tag in nuance_tags)
+        tags_html = f'<span class="rel-tags">{tags_html}</span>'
+    head = (
+        '<span class="rel-head">'
+        f'<span class="rel-type">{prefix}</span>'
+        f'<span class="rel-word">{rel_word}</span>'
+        f'{level_html}{tags_html}'
+        '</span>'
+    )
+    note_html = f'<span class="rel-note">{note}</span>' if note else ''
+    return f'<li class="rel rel-{rel_type}">{head}{note_html}</li>'
 
 
 def format_related(word):
@@ -83,10 +89,10 @@ def format_related(word):
 
         # The back of the card also shows the free-text nuance note (usage
         # preferences, register, position) for reference; the front stays clean.
-        back_items.append(_build_item(prefix, rel_word, nuance_tags, jlpt_label, note))
+        back_items.append(_build_item(prefix, rel_word, nuance_tags, jlpt_label, note, rel_type))
 
         masked_word = _mask_shared_kanji(rel_word, target_word)
-        front_items.append(_build_item(prefix, masked_word, nuance_tags, jlpt_label))
+        front_items.append(_build_item(prefix, masked_word, nuance_tags, jlpt_label, None, rel_type))
 
     wrap = lambda items: '<ul class="related-list">' + ''.join(items) + '</ul>'
     return wrap(front_items), wrap(back_items)
