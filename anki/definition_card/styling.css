@@ -60,22 +60,101 @@
 }
 
 .related {
-  margin-top: 1rem;
+  margin-top: 1.5rem;
+  text-align: left;
 }
 
 .related-list {
-  text-align: left;
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  max-width: 24em;
   font-size: 28px;
-  color: #555;
-  padding-left: 1.5em;
-  margin: 0;
 }
 
-.related-list li {
-  margin-bottom: 0.2em;
+.related-list .rel {
+  background: #f6f7f9;
+  border-left: 5px solid #b8c0cc;
+  border-radius: 10px;
+  padding: 0.5em 0.8em;
+  margin-bottom: 0.55em;
+}
+
+.rel-related {
+  border-left-color: #4a90d9;
+}
+
+.rel-synonym {
+  border-left-color: #35c08a;
+}
+
+.rel-antonym {
+  border-left-color: #e8506e;
+}
+
+.rel-head {
+  line-height: 1.6;
+}
+
+.rel-type {
+  color: #aab;
+  font-weight: 700;
+  margin-right: 0.35em;
+}
+
+.rel-word {
+  font-weight: 700;
+  color: #1f2430;
+  margin-right: 0.4em;
+}
+
+.rel-level,
+.rel-tag {
+  display: inline-block;
+  font-size: 0.6em;
+  vertical-align: middle;
+  border-radius: 999px;
+  padding: 0.2em 0.7em;
+  margin: 0 0.2em 0.2em 0;
+  line-height: 1.5;
 }
 
 .rel-level {
-  font-size: 0.75em;
-  color: #999;
+  color: #fff;
+  background: #8a94a6;
+  letter-spacing: 0.03em;
+}
+
+.rel-tag {
+  color: #55606f;
+  background: #e6e9ef;
+}
+
+.rel-note {
+  display: block;
+  margin-top: 0.4em;
+  font-size: 0.72em;
+  color: #6b7280;
+  line-height: 1.45;
+}
+
+.nightMode .related-list .rel {
+  background: #2a2d33;
+}
+
+.nightMode .rel-word {
+  color: #e8eaed;
+}
+
+.nightMode .rel-tag {
+  background: #3a3f47;
+  color: #c3c8d0;
+}
+
+.nightMode .rel-level {
+  background: #5c6370;
+}
+
+.nightMode .rel-note {
+  color: #9aa2ad;
 }
