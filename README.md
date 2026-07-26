@@ -73,9 +73,14 @@ benkyo-backend/
 │   ├── responses/          # API response builders
 │   ├── schemas/            # Request validation schemas
 │   └── views/              # Route handlers (controllers)
+├── scripts/                # Vocabulary relationship / nuance migrations
+│   └── README.md           # Migration timeline & script index
+├── anki/                   # Anki card templates for JLPT CSV export
 ├── requirements.txt
 └── wsgi.py                 # WSGI entry point for production
 ```
+
+See [`scripts/README.md`](scripts/README.md) for what has been migrated (relationships, nuance tags, basic words) and how to re-run status checks.
 
 ## API Reference
 

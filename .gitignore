@@ -12,8 +12,9 @@ component_dictionary.py
 # Data
 snapshots/
 
-# Relationship migration scripts
-scripts/
+# Relationship migration scripts (keep README published)
+scripts/*
+!scripts/README.md
 
 # Cursor
 .cursor/
