@@ -126,10 +126,10 @@ Find candidates:
 For each real synonym, antonym, near-synonym, or expression/component link in the DB, add:
 
 ```js
-{ wordId: ObjectId("..."), type: "synonym" | "antonym" | "related", note: "<English: how THAT word differs from this one>. N1", tags: [...] }
+{ wordId: ObjectId("..."), type: "synonym" | "antonym" | "related", note: "<English: how THAT word differs from this one>", tags: [...] }
 ```
 
-- `note` describes the **related** word's nuance, not the new word's. Write it in English and end it with that word's JLPT level (`N1`/`N2`/`N3`), or leave the level out if it has none.
+- `note` describes the **related** word's nuance, not the new word's. Write it in English. Don't add the JLPT level: the Anki card shows it as a badge next to the related word.
 - `tags` describe how the **related** word is used **compared to the new one**. Existing relationship tags are `formal`, `casual`, `spoken`, `written`, `technical`, `literary`, `polite`, `archaic`, `humble`. All the usage tags from step 4 are welcome too (`rare`, `feminine`, `elderly_speech`, `dated`…), as are `expression` and `component` from step 3. Anki shows these on both sides of the card. Be generous where a tag genuinely tells the two words apart.
 - Links go **both ways**. For every link, plan the reverse `$push` on the other word, with its own note and with opposite tags swapped: `formal`↔`casual`, `spoken`↔`written`, `expression`↔`component`.
 - Skip plain compounds that only contain the kanji (～家, ～客).
