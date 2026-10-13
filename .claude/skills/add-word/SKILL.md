@@ -70,7 +70,14 @@ Match the shape of existing entries:
 
 ### Kanji spelling
 
-If the word has a kanji spelling, store it in kanji. This holds however rare, obscure or unused that kanji is: `何処`, not `どこ`. Put the reading in `hiragana`. If jisho marks it "Usually written using kana alone", add the `usually_kana` tag; the Anki export then shows the kana form on the card. The user often types the kana form (どこ), so take the kanji spelling from jisho's `japanese[].word`, using the first one if there are several. Only words with no kanji spelling at all are stored in kana. Example sentences should spell the word the way it's naturally written (usually kana for `usually_kana` words).
+If the word has a kanji spelling, store it in kanji. This holds however rare, obscure or unused that kanji is: `何処`, not `どこ`. Put the reading in `hiragana`. If jisho marks it "Usually written using kana alone", add the `usually_kana` tag; the Anki export then shows the kana form on the card. The user often types the kana form (どこ), so take the kanji spelling from jisho's `japanese[].word`, using the first one if there are several. Only words with no kanji spelling at all are stored in kana.
+
+**Exception: kanji spellings shared by several readings.** Sometimes the exact same kanji spelling has more than one reading, e.g. `包む` is both つつむ and くるむ. Only the most common reading gets the kanji spelling: `包む` (つつむ). The other reading is stored in kana: `くるむ`. To find the most common reading:
+- search jisho for the kanji spelling itself and compare the entries that use it;
+- the reading of the top-ranked entry wins, and `is_common` breaks ties;
+- if the DB already has that kanji spelling with another reading, the stored one is normally the common one.
+
+State this choice in the draft, since the user may disagree. Example sentences should spell the word the way it's naturally written (usually kana for `usually_kana` words).
 
 Type mapping from jisho parts of speech:
 - Godan / Ichidan verbs → `verb`
@@ -133,7 +140,7 @@ For each real synonym, antonym, near-synonym, or expression/component link in th
 If the word is already in the DB, don't just skip it. Review the whole entry and propose improvements:
 - Is the `spanish` field accurate, and does it tell the word apart from its synonyms?
 - Are the type, group and tags right under the current rules? Add any missing usage tags.
-- Is the word stored in kana even though it has a kanji spelling? Switch `word` to the kanji form and add `usually_kana` (see "Kanji spelling").
+- Is the word stored in kana even though it has a kanji spelling? Switch `word` to the kanji form and add `usually_kana` (see "Kanji spelling"), unless another, more common reading owns that kanji spelling.
 - Are the sentences natural and at the right level? Does a component word use its own expression in its sentences?
 - Is `notes` clean?
 - Look for missing related words, missing reverse links, and weak or missing relationship notes and tags.
