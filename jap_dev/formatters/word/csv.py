@@ -18,6 +18,13 @@ REL_NOTE_PATTERNS = [
 
 MASK_CHAR = '■'
 
+# Word tags that already have their own CSV column (or, for usually_kana, change
+# which form is exported). Every other word tag is a usage tag (rare, feminine,
+# elderly_speech...) and goes into the `usage` column.
+COLUMN_TAGS = {'common', 'jlpt_n1', 'expression', 'onomatopoeic', 'transitive', 'intransitive', 'usually_kana'}
+
+USAGE_LABELS = {'joyogai': 'Not Joyo'}
+
 
 def _is_kanji(ch):
     cp = ord(ch)
@@ -64,7 +71,8 @@ def format_related(word):
         oid = str(w['_id'])
         word_map[oid] = {
             'word': w.get('word') or w.get('hiragana', '?'),
-            'group': w.get('group', ''),
+            # N1 words outside the jlpt_n1 group (gaming, literature...) only carry the tag
+            'jlpt': JLPT_LABELS.get(w.get('group', '')) or ('N1' if 'jlpt_n1' in w.get('tags', []) else ''),
         }
 
     front_items = []
@@ -75,7 +83,7 @@ def format_related(word):
 
         if entry:
             rel_word = entry['word']
-            jlpt_label = JLPT_LABELS.get(entry['group'], '')
+            jlpt_label = entry['jlpt']
         elif rel.get('word'):
             rel_word = rel['word']
             jlpt_label = ''
@@ -96,6 +104,11 @@ def format_related(word):
 
     wrap = lambda items: '<ul class="related-list">' + ''.join(items) + '</ul>'
     return wrap(front_items), wrap(back_items)
+
+
+def format_usage(tags):
+    labels = [USAGE_LABELS.get(tag, tag.replace('_', ' ').capitalize()) for tag in tags if tag not in COLUMN_TAGS]
+    return ''.join(f'<span class="tag usage">{label}</span>' for label in labels)
 
 
 def clean_notes(notes):
@@ -152,6 +165,7 @@ def format_csv_word(word):
             formatted_word['transitive'] = True
         if 'intransitive' in word['tags']:
             formatted_word['intransitive'] = True
+        formatted_word['usage'] = format_usage(word['tags'])
 
     related_front, related_back = format_related(word)
     formatted_word['related_front'] = related_front
