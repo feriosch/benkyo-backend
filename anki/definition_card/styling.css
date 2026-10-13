@@ -38,6 +38,10 @@
   background-color: hsl(348, 86%, 61%);
 }
 
+.usage {
+  background-color: hsl(0, 0%, 48%);
+}
+
 .link {
   background-color: hsl(217, 71%, 53%);
 }
