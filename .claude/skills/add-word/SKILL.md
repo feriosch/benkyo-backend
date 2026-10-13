@@ -54,7 +54,7 @@ Match the shape of existing entries:
 
 ```js
 {
-  word: "囁く",                 // kanji form (kana if it's normally written in kana and has no common kanji)
+  word: "囁く",                 // ALWAYS the kanji form if one exists (see "Kanji spelling" below)
   hiragana: "ささやく",
   spanish: "susurrar (a alguien, en voz baja)",   // SPANISH, short, comma-separated senses, context in parentheses
   type: { verb: 1 },            // keys: noun, suru, no_adj, na_adj, i_adj, adv, verb, adj_noun, adv_noun, counter (value 1)
@@ -67,6 +67,10 @@ Match the shape of existing entries:
   related: []                   // step 5
 }
 ```
+
+### Kanji spelling
+
+If the word has a kanji spelling, store it in kanji. This holds however rare, obscure or unused that kanji is: `何処`, not `どこ`. Put the reading in `hiragana`. If jisho marks it "Usually written using kana alone", add the `usually_kana` tag; the Anki export then shows the kana form on the card. The user often types the kana form (どこ), so take the kanji spelling from jisho's `japanese[].word`, using the first one if there are several. Only words with no kanji spelling at all are stored in kana. Example sentences should spell the word the way it's naturally written (usually kana for `usually_kana` words).
 
 Type mapping from jisho parts of speech:
 - Godan / Ichidan verbs → `verb`
@@ -129,6 +133,7 @@ For each real synonym, antonym, near-synonym, or expression/component link in th
 If the word is already in the DB, don't just skip it. Review the whole entry and propose improvements:
 - Is the `spanish` field accurate, and does it tell the word apart from its synonyms?
 - Are the type, group and tags right under the current rules? Add any missing usage tags.
+- Is the word stored in kana even though it has a kanji spelling? Switch `word` to the kanji form and add `usually_kana` (see "Kanji spelling").
 - Are the sentences natural and at the right level? Does a component word use its own expression in its sentences?
 - Is `notes` clean?
 - Look for missing related words, missing reverse links, and weak or missing relationship notes and tags.
