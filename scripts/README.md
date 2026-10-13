@@ -69,6 +69,33 @@ UI/API: `POST/DELETE /words/<id>/related/basic` — no reverse link.
 
 Skip pure compounds (`～～家`, `～～客`); keep nuanced / derived pairs.
 
+### Phase 6 — N3 gap fill against jisho.org (2026-10-12)
+
+Compared every `jlpt_n3` word and its `notes` references with the jisho.org API (JLPT tags, see-also, antonyms). Words that are N5/N4/N3 on jisho but in none of the collections are too basic to study, so they went to `basic` as real vocabulary entries that other words can link to.
+
+| File | Purpose |
+|------|---------|
+| `n3_gap_fill/SUMMARY.md` | Reviewed proposal: links by word, new basic words, notes cleanup |
+| `n3_gap_fill/report.md` | Full analysis, including report-only items (JLPT mismatches, missing N2/N1 words) |
+| `n3_gap_fill/curated_links.txt`, `new_basic.txt`, `nuance.txt` | Curated inputs |
+| `n3_gap_fill/backup.js` → `snapshots/n3_gap_fill_backup.json` | Pre-migration copy of the 379 affected docs |
+| `n3_gap_fill/migrate.js` | Idempotent apply script |
+
+**Result:** 150 new `basic` words; 301 bidirectional links (602 edges; 110 with nuance tags); 189 `notes` stripped of references that are now real links (110 became empty). Re-run gave 0/0/0. Afterwards there were 0 dangling `wordId`s, and the 50 one-way edges were all there before this migration.
+
+### Phase 7 — N2 gap fill against jisho.org (2026-10-13)
+
+Same pipeline as Phase 6 for the existing `jlpt_n2` words. Related jisho N2/N1 words not in the DB were **not** added (listed as report-only). jisho N5/N4/N3 words not in any collection went to `basic`, stored in their kanji spelling with `usually_kana` where jisho says so (迚も, 瓦斯), per the `/add-word` skill. Relationship notes carry no JLPT suffix: the Anki badge shows the level.
+
+| File | Purpose |
+|------|---------|
+| `n2_gap_fill/SUMMARY.md`, `report.md` | Reviewed proposal and full analysis (incl. 179 `jlpt_n2` words whose jisho tag isn't N2; the 38 untagged ones stay in N2) |
+| `n2_gap_fill/curated.txt`, `new_basic.txt` | Curated links (with tags and notes for both sides) and new basic words |
+| `n2_gap_fill/backup.js` → `snapshots/n2_gap_fill_backup.json` | Pre-migration copy of the 219 affected docs |
+| `n2_gap_fill/migrate.js` | Idempotent apply script |
+
+**Result:** 50 new `basic` words; 154 bidirectional links (308 edges; 30 with nuance tags); 63 `notes` cleaned (43 became empty). Re-run gave 0/0/0; 0 dangling `wordId`s; one-way edges unchanged at 50 (pre-existing). `jlpt_n2` words with related words: 505 / 1378.
+
 ---
 
 ## Data model reminders
