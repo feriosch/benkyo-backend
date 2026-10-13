@@ -8,7 +8,7 @@ argument-hint: <word or expression> [what you were doing: reading, gaming, anime
 
 Input: `$ARGUMENTS` — one or more Japanese words or expressions, plus optional context: what the user was doing when they found it (reading, gaming, watching anime, a movie, studying for JLPT N1…), which meaning they care about, where they saw it. If no word is given, ask for one.
 
-DB access: `set -a; . /c/Users/Boogs/.benkyo/claude-db.env; set +a` then `mongosh "$MONGODB_URI"`. Database `vocabulary`, collection `words`. It is **production**: never print the URI or password, and never write before the user approves the draft (step 6).
+DB access: `set -a; . /c/Users/Boogs/.benkyo/claude-db.env; set +a` then `mongosh "$MONGODB_URI"`. Database `vocabulary`, collection `words`. It is **production**: never print the URI or password, and only write without approval when step 6 allows it. Every write is logged (step 8).
 
 For any mongosh call with Japanese text, write the script to a `.js` file in the scratchpad and run `mongosh "$MONGODB_URI" --quiet --file <file>`. Quoting Japanese inside `--eval` breaks easily.
 
@@ -149,7 +149,12 @@ Show the proposal as a before → after diff. After approval, apply it with `upd
 
 ## 6. Draft and approval
 
-Show one compact draft covering all new words, expressions and edits:
+**Trivial adds need no approval.** If every point below holds, skip the approval and go straight to step 7. Still show the user what was written afterwards.
+- you didn't need to ask the user anything (group, homograph, meaning, which reading gets the kanji, known/unknown components);
+- all of it is **new** words: no edits to existing words' own fields (the **Repeated words** review always needs approval);
+- the only changes to existing words are appending reverse `related` links for the new words.
+
+Anything else needs approval. Show one compact draft covering all new words, expressions and edits:
 - word, hiragana, spanish, type, group (and why), tags, notes, sentences
 - each relationship, with both directions' notes and tags
 - any assumptions (known/unknown components, the activity group)
@@ -158,10 +163,24 @@ Ask the user to approve or edit. Apply their edits, and show the draft again if 
 
 ## 7. Write
 
-Only after approval, write one `.js` file that:
+After approval (or straight away for a trivial add), write one `.js` file that:
 1. inserts all new documents first and captures their `_id`s, so words in the same batch (such as an expression and its component) can link to each other;
 2. sets the `related` arrays between the new words, and adds reverse links on existing words with `$push`, skipping any link that already exists;
 3. applies the approved `$set` edits to existing words;
 4. prints each new `_id` and the matched/modified counts.
 
 Run it. Then read the affected documents back and tell the user what was written: the words, their `_id`s, the reverse links added and any edits. If anything failed, say exactly what was and wasn't written.
+
+## 8. Log
+
+After every write, approved or not, append one line per written word to `/c/Users/Boogs/.benkyo/word-log.md` (create it if missing, with a `# Benkyo word log` heading). Format:
+
+```
+- 2026-10-13 · added · 囁く (ささやく) · jlpt_n2 · 6a54f30739c7ab59a78cb305 · auto · rel: ~呟く(spoken), =小声で話す
+```
+
+- action: `added` or `edited` (for edits, list the changed fields instead of the group);
+- `auto` for trivial adds, `approved` otherwise;
+- `rel:` lists the relationships written, as type prefix (`=` synonym, `✕` antonym, `~` related) + word + tags; reverse links are implied.
+
+Keep the line short. If a write failed, log only what actually reached the DB.
