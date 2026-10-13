@@ -1,7 +1,8 @@
 ---
 name: add-word
-description: Add a new Japanese vocabulary word or expression to the Benkyo MongoDB database (vocabulary.words), or review and improve it if it already exists. Use whenever the user says they found, learned, saw or want to add/save a Japanese word or expression (e.g. "new word: 囁く", "add 首にされる, I'm reading", "/add-word 懸賞"), even if they don't mention the database.
-argument-hint: <word or expression> [what you were doing: reading, gaming, anime, movie, studying N1…]
+description: >-
+  Add a new Japanese vocabulary word or expression to the Benkyo MongoDB database (vocabulary.words), or review and improve it if it already exists. Use whenever the user says they found, learned, saw or want to add/save a Japanese word or expression (e.g. "new word: 囁く", "add 首にされる, I'm reading", "/add-word 懸賞"), even if they don't mention the database.
+argument-hint: '<word or expression> [what you were doing: reading, gaming, anime, movie, studying N1…]'
 ---
 
 # Add a word to Benkyo
