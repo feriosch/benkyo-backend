@@ -18,3 +18,7 @@ scripts/*
 
 # Cursor
 .cursor/
+
+# Python tooling
+.venv/
+.pytest_cache/

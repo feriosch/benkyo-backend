@@ -2,14 +2,16 @@
 
 <hr id=answer>
 
-<div class="word">{{Word}}</div>
-<div class="hiragana">{{Pronunciation}}</div>
+<div class="word" lang="ja">{{Word}}</div>
+{{#Pronunciation}}<div class="hiragana" lang="ja">{{Pronunciation}}</div>{{/Pronunciation}}
 
-<ul class="sentences">
-	<li>{{Japanese Sentence}}</li>
-	<li>{{Translation Sentence}}</li>
-</ul>
+{{#Japanese Sentence}}
+<div class="sentence">
+	<div class="sentence-ja" lang="ja">{{Japanese Sentence}}</div>
+	{{#Translation Sentence}}<div class="sentence-es" lang="es">{{Translation Sentence}}</div>{{/Translation Sentence}}
+</div>
+{{/Japanese Sentence}}
 
 {{#Related Back}}
-<div class="related">{{Related Back}}</div>
+<div class="related" lang="ja">{{Related Back}}</div>
 {{/Related Back}}

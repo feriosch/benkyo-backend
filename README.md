@@ -76,7 +76,9 @@ benkyo-backend/
 ├── scripts/                # Vocabulary relationship / nuance migrations
 │   └── README.md           # Migration timeline & script index
 ├── anki/                   # Anki card templates for JLPT CSV export
+├── tests/                  # pytest suite (word CSV export)
 ├── requirements.txt
+├── requirements-dev.txt    # requirements + pytest
 └── wsgi.py                 # WSGI entry point for production
 ```
 
@@ -233,6 +235,24 @@ All errors follow this format:
 | 404 | Not Found - Resource doesn't exist |
 
 ## Development
+
+### Tests
+
+With the virtual environment active:
+
+```bash
+pip install -r requirements-dev.txt
+python -m pytest              # all tests
+python -m pytest -k related   # only tests whose name matches
+```
+
+The unit tests never connect to MongoDB (`tests/conftest.py` replaces the DB connection).
+`tests/test_word_csv_integration.py` runs the real CSV aggregations read-only and is skipped
+unless `BENKYO_TEST_MONGODB_URI` is set:
+
+```bash
+BENKYO_TEST_MONGODB_URI="mongodb+srv://..." python -m pytest tests/test_word_csv_integration.py
+```
 
 ### Running with Docker
 

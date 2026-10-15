@@ -40,7 +40,8 @@ Flask 2.1 REST API + MongoDB Atlas for a personal Japanese-study app (vocabulary
 
 ## Environment & commands
 
-- Run locally: `python application.py` (reads `.env` via python-dotenv; `PORT` defaults to 80). No test suite exists — verify with `curl` against the running server or with mongosh reads.
+- Run locally: `python application.py` (reads `.env` via python-dotenv; `PORT` defaults to 80). Tests: `.venv/Scripts/python -m pytest` (pytest, `tests/`; install with `pip install -r requirements-dev.txt`). They cover the word CSV export only; the DB connection is stubbed in `tests/conftest.py`. The read-only integration test runs when `BENKYO_TEST_MONGODB_URI` is set (`BENKYO_TEST_MONGODB_URI="$MONGODB_URI"` after loading the claude env file). For other endpoints, verify with `curl` against the running server or with mongosh reads.
+- Changes to the word CSV export (`*/word/csv.py`, `anki/`) must keep `python -m pytest` green; add tests for new behavior.
 - Project targets Python 3.11+ (Docker uses 3.11-slim); the machine's default `python` is 3.10, so prefer a venv with 3.11+ if dependencies fail.
 - `requirements.txt` is **UTF-16 LE** encoded — preserve the encoding when editing it.
 - Deploy is a manual GitHub Actions `workflow_dispatch` (`.github/workflows/deploy.yml`) that pushes an image to GCP Artifact Registry. Never trigger it; the user does.

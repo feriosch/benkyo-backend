@@ -45,6 +45,7 @@ def get_words_for_csv(collection, tags, usually_kana):
     pipeline.append({
         '$project': {
             '_id': 0,
+            'id': {'$toString': '$_id'},
             'word': word_projection,
             'hiragana': hiragana_projection,
             'spanish': 1,
@@ -81,6 +82,7 @@ def get_jlpt_words_for_csv(usually_kana):
     pipeline.append({
         '$project': {
             '_id': 0,
+            'id': {'$toString': '$_id'},
             'word': word_projection,
             'hiragana': hiragana_projection,
             'spanish': 1,
