@@ -9,7 +9,7 @@ argument-hint: '<word or expression> [what you were doing: reading, gaming, anim
 
 Input: `$ARGUMENTS` — one or more Japanese words or expressions, plus optional context: what the user was doing when they found it (reading, gaming, watching anime, a movie, studying for JLPT N1…), which meaning they care about, where they saw it. If no word is given, ask for one.
 
-DB access: `set -a; . /c/Users/Boogs/.benkyo/claude-db.env; set +a` then `mongosh "$MONGODB_URI"`. Database `vocabulary`, collection `words`. It is **production**: never print the URI or password, and only write without approval when step 6 allows it. Every write is logged (step 8).
+DB access: `set -a; . /c/Users/Boogs/.benkyo/claude-db.env; set +a` then `mongosh "$MONGODB_URI"`. Database `vocabulary`, collection `words`. It is **production**: never print the URI or password, and only write without approval when step 6 allows it (new words and improvements to existing words; not deletes, merges, group moves or bulk changes). Every write is logged (step 8).
 
 For any mongosh call with Japanese text, write the script to a `.js` file in the scratchpad and run `mongosh "$MONGODB_URI" --quiet --file <file>`. Quoting Japanese inside `--eval` breaks easily.
 
@@ -17,6 +17,8 @@ For any mongosh call with Japanese text, write the script to a `.js` file in the
 
 - **DB:** `db.words.find({$or:[{word:W},{hiragana:W}]})`. If it already exists, go to **Repeated words** below instead of stopping.
 - **jisho.org:** `curl -s "https://jisho.org/api/v1/search/words?keyword=<url-encoded W>"`. Take the entry whose `slug` or `japanese[].word` matches. It gives the reading, `jlpt`, `is_common`, parts of speech, sense `tags` (Archaic, Rare, Colloquial, Female term, Slang, Kansai dialect…) and English meanings. If several homographs match, ask which one.
+- **Conjugations:** if the input is just a regular conjugation of a basic or known word (causative 死なせる ← 死ぬ, passive, potential, causative-passive…), don't add it, even when jisho lists it as its own entry. Tell the user which word it comes from and move on.
+- **Conjugated input from a picture or screenshot:** if the user sends a picture of a conjugated verb or adjective (e.g. 震撼させる), write the **dictionary form** only. Never write the conjugated form anywhere, not in `word`, `notes`, `spanish`, or a link note, unless it is almost exclusive to an expression (e.g. 身を翻す, 屈託のない). The user already knows the conjugation rules; don't spell them out. Conjugated forms are fine inside notes or link notes when they are part of an expression or an example (e.g. 世界を震撼させる, 気絶させる as an example of use).
 
 ## 2. Pick the group (collection)
 
@@ -36,6 +38,8 @@ If the word is N1 or has no JLPT tag and the user didn't say what they were doin
 
 ## 3. Expressions
 
+- **Confirm with jisho first.** The user often sends a phrase without knowing whether it's an expression. Look it up on jisho: if jisho lists it as an entry (e.g. 身を翻す, 色気より食い気, 屈託のない), store it as an expression. If jisho doesn't list it (e.g. 難問に直面する), it's just a common collocation: don't add it as its own word. Write the phrase as a note on the word(s) it's built from, in the form "X に Y する: <meaning> (collocación común)".
+
 An expression is a set phrase such as 首にされる or 腹が立つ. Store it as one word: `word: "首にされる"`, give it the `expression` tag, and use the `type` of what it acts as (`首にされる` → `verb`). Its group follows step 2, using the expression's own JLPT tag, which usually means the activity group.
 
 Then look at its **main components** (首, する):
@@ -44,6 +48,7 @@ Then look at its **main components** (首, する):
 - **One or more components are unknown** (not in the DB and above N4): add **each unknown component as its own word** (full steps 1–5) **plus** the expression, and link them:
   - expression → component: `{type: "related", tags: ["component", …], note: "<what the component means on its own>"}`
   - component → expression: `{type: "related", tags: ["expression", …], note: "<what the expression means>"}`
+  - **Exception: components that barely live outside the compound.** If an unknown component is rarely used on its own and almost only appears in this expression or compound (通牒 → 最後通牒, 屈託 → 屈託のない), don't add it as a word: store only the expression/compound and explain the component in its `notes` (e.g. `屈託: preocupacion (casi solo se usa en esta expresion)`). The user doesn't want useless standalone entries. Mention the choice afterwards so they can ask for the component if they want it.
 - Also link the expression to any of its components that are already in the DB and not in `basic`, using the same tags.
 - **Sentences:** the component word's example sentences must **not** use the expression. They should show the component used on its own. Usages of the expression go only in the expression's sentences.
 
@@ -80,6 +85,10 @@ If the word has a kanji spelling, store it in kanji. This holds however rare, ob
 
 State this choice in the draft, since the user may disagree. Example sentences should spell the word the way it's naturally written (usually kana for `usually_kana` words).
 
+Spelling follows jisho: when jisho's headword is kana (e.g. ぱちり, こそばゆい, which jisho lists only in kana), store that kana as `word` and `hiragana`, even if the word is usually written in katakana in games or manga. Don't convert it to katakana.
+
+Type values: the number is the form the UI shows, not a count. `1`/`2` = plain, `3` = ～に, `4` = ～と, `5` = ～的, `6` = ～的に, `7` = ～たる, `8` = ～を. E.g. 根本 is `{noun: 1, na_adj: 5, adv: 6}` (根本的, 根本的に).
+
 Type mapping from jisho parts of speech:
 - Godan / Ichidan verbs → `verb`
 - "Suru verb" → `noun` + `suru`
@@ -87,7 +96,7 @@ Type mapping from jisho parts of speech:
 - "No-adjective" → `no_adj`
 - "I-adjective" → `i_adj`
 - "Adverb" → `adv`
-- "Adverb taking the 'to' particle" → `adv`, with `notes` set to `adv. と`
+- "Adverb taking the 'to' particle" → `adv: 1`, with `notes` set to `adv. と`. jisho's tag means と is *allowed*, not required: most mimetic adverbs work with or without it (ほんのり甘い / ほんのりと甘い, じわじわ, じっくり, うっすら). Use `adv: 4` (～と) only when と is required for adverbial use, which is mostly ～たる kango (敢然と, 堂々と, 颯爽と: ✗敢然立ち向かう).
 - "Counter" → `counter`
 
 The `spanish` field drives the Anki definition card. It must tell this word apart from its near-synonyms, e.g. `premio (objeto)` vs `premio (dinero)`.
@@ -146,16 +155,17 @@ If the word is already in the DB, don't just skip it. Review the whole entry and
 - Is `notes` clean?
 - Look for missing related words, missing reverse links, and weak or missing relationship notes and tags.
 
-Show the proposal as a before → after diff. After approval, apply it with `updateOne` (`$set`, plus `$push` or arrayFilters for `related`).
+Apply the improvements directly with `updateOne` (`$set`, plus `$push` or arrayFilters for `related`); no approval needed (see step 6). Print a `BACKUP` EJSON line of the doc before writing, then show the user a before → after diff of what changed.
 
 ## 6. Draft and approval
 
-**Trivial adds need no approval.** If every point below holds, skip the approval and go straight to step 7. Still show the user what was written afterwards.
+**Most writes need no approval.** Go straight to step 7 and show the user what was written afterwards when:
 - you didn't need to ask the user anything (group, homograph, meaning, which reading gets the kanji, known/unknown components);
-- all of it is **new** words: no edits to existing words' own fields (the **Repeated words** review always needs approval);
-- the only changes to existing words are appending reverse `related` links for the new words.
+- the changes are new words, reverse `related` links, and/or **improvements to existing words** (the **Repeated words** review: spanish, type, tags, notes, sentences, reading/spelling fixes, related links and their notes/tags). The user trusts these judgment calls (2026-10-15).
 
-Anything else needs approval. Show one compact draft covering all new words, expressions and edits:
+Still ask first for: deleting a word, merging or splitting entries (e.g. 大家 おおや/たいか), moving a word to another group, and any bulk change across many words (that also follows the CLAUDE.md migration rules: snapshot, dry-run count, approval of the exact command).
+
+Anything that needs approval: Show one compact draft covering all new words, expressions and edits:
 - word, hiragana, spanish, type, group (and why), tags, notes, sentences
 - each relationship, with both directions' notes and tags
 - any assumptions (known/unknown components, the activity group)
@@ -164,7 +174,13 @@ Ask the user to approve or edit. Apply their edits, and show the draft again if 
 
 ## 7. Write
 
-After approval (or straight away for a trivial add), write one `.js` file that:
+**Concurrency (several chats may write to the DB at once):**
+- Re-check that a new word doesn't exist in the same script, right before `insertOne`. An earlier check in the chat can be stale.
+- For existing words, use targeted updates: `$push` for links and `$set` on only the fields you're changing. Don't overwrite a whole entry you read earlier, because another chat may have changed it since.
+- Only one chat edits this skill file at a time. Other chats leave it alone.
+- The word log is append-only. Don't rewrite it.
+
+Straight away (or after approval, when step 6 requires it), write one `.js` file that:
 1. inserts all new documents first and captures their `_id`s, so words in the same batch (such as an expression and its component) can link to each other;
 2. sets the `related` arrays between the new words, and adds reverse links on existing words with `$push`, skipping any link that already exists;
 3. applies the approved `$set` edits to existing words;

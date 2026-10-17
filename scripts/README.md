@@ -96,6 +96,16 @@ Same pipeline as Phase 6 for the existing `jlpt_n2` words. Related jisho N2/N1 w
 
 **Result:** 50 new `basic` words; 154 bidirectional links (308 edges; 30 with nuance tags); 63 `notes` cleaned (43 became empty). Re-run gave 0/0/0; 0 dangling `wordId`s; one-way edges unchanged at 50 (pre-existing). `jlpt_n2` words with related words: 505 / 1378.
 
+### Phase 8 — Optional-と adverbs (2026-10-15)
+
+`type.adv: 4` (UI shows ～と) had been used for every adverb jisho tags "taking と", although と is optional for most mimetics (ほんのり(と), じわじわ(と)). Rule now in the `/add-word` skill: optional と → `adv: 1` + note `adv. と`; `adv: 4` only when と is required (～たる kango like 敢然, 堂々; ぽかん, きょとん, 一段と…).
+
+| File | Purpose |
+|------|---------|
+| `adv_to_optional_migration.js` | Hand-curated word lists; `var DRY=true` writes `snapshots/adv_to_optional_2026-10-14.json`, `DRY=false` applies (filtered on `type.adv: 4`, idempotent) |
+
+**Result:** 52 modified: 43 → `adv: 1` + `adv. と` note, 8 with と built into the word (ぎゅっと, 真逆…) → `adv: 1`, まじまじと見る lost its stray `adv`. 57 words keep `adv: 4`.
+
 ---
 
 ## Data model reminders
