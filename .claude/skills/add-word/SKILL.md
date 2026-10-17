@@ -174,6 +174,12 @@ Ask the user to approve or edit. Apply their edits, and show the draft again if 
 
 ## 7. Write
 
+**Concurrency (several chats may write to the DB at once):**
+- Re-check that a new word doesn't exist in the same script, right before `insertOne`. An earlier check in the chat can be stale.
+- For existing words, use targeted updates: `$push` for links and `$set` on only the fields you're changing. Don't overwrite a whole entry you read earlier, because another chat may have changed it since.
+- Only one chat edits this skill file at a time. Other chats leave it alone.
+- The word log is append-only. Don't rewrite it.
+
 Straight away (or after approval, when step 6 requires it), write one `.js` file that:
 1. inserts all new documents first and captures their `_id`s, so words in the same batch (such as an expression and its component) can link to each other;
 2. sets the `related` arrays between the new words, and adds reverse links on existing words with `$push`, skipping any link that already exists;
