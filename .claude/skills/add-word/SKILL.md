@@ -107,6 +107,8 @@ Tags matter more and more. The user meets words they have never heard, and tags 
 
 **Basic tags** (the UI form knows these): `common`, `usually_kana`, `transitive`, `intransitive`, `expression`, `honorific`, `humble`, `onomatopoeic`, `jargon`, `ateji`, `joyogai`, `jlpt_n1`.
 
+**Jōyō check (required for every write):** check each kanji in the headword on `https://kanjiapi.dev/v1/kanji/<url-encoded kanji>`. If `grade` is `null` or 9 or higher, the kanji is not jōyō, so add the `joyogai` tag (e.g. 捏 in 捏造, 嘔 in 嘔吐). A response without a `grade` key is an error (rate limit): wait and retry, don't treat it as non-jōyō. Pace requests (about one per second) when checking several kanji.
+
 **Usage tags.** Add these when they apply, based on jisho sense tags and your own knowledge:
 - Register: `formal`, `casual`, `polite`, `business`
 - Medium: `written`, `spoken`, `literary`, `poetic`, `technical`
