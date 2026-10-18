@@ -29,6 +29,11 @@ Create the note type with exactly these fields, in this order:
 15. Related Front
 16. Related Back
 17. Usage
+18. Notes Front
+
+`Notes Front` is `Notes` with the answer hidden (`■`): the word, its reading in
+hiragana/katakana and any shared kanji. The definition card's front shows it; its back
+shows the full `Notes`.
 
 `Id` is the word's MongoDB ObjectId. It is the first field, so Anki uses it as the
 note key: re-importing updates the existing note even if the word, its reading or

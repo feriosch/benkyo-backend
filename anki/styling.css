@@ -137,6 +137,12 @@ hr#answer {
   margin: 0.8em auto;
 }
 
+/* The answer side repeats the front ({{FrontSide}}) and then shows the full
+   notes, so hide the masked copy there. */
+.card:has(#answer) .notes-front {
+  display: none;
+}
+
 /* Related words (HTML built by jap_dev/formatters/word/csv.py) */
 
 .related {

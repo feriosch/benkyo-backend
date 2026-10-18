@@ -27,7 +27,7 @@ Flask 2.1 REST API + MongoDB Atlas for a personal Japanese-study app (vocabulary
 - Basic (text-only) edge: `{word: "天気", type, note, tags?}` — never has a reverse link.
 - Nuance tags: `formal, casual, spoken, written, literary, technical, archaic, polite, humble` — they describe how the *related* word differs from the source.
 - `related.wordId` is stored as ObjectId — always wrap with `ObjectId(...)` in queries/arrayFilters.
-- Anki export (`formatters/word/csv.py`, `anki/*/`): front masks shared kanji with `■`, back shows full words.
+- Anki export (`formatters/word/csv.py`, `anki/*/`): the definition card front hides the answer with `■` (`mask_answer`: the word, its reading in hiragana/katakana, the stem of inflecting words, shared kanji) in `Related Front` and `Notes Front`; the back shows full text. The query passes the DB forms as `answer_word`/`answer_reading` because `usually_kana` swaps `word` to kana.
 
 ## Database access (PRODUCTION — there is no separate dev DB)
 

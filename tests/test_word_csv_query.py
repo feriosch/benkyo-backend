@@ -77,6 +77,17 @@ def test_projection_keeps_fields_the_formatter_needs(collection, fetch):
     assert project['translation'] == {'$first': '$sentences.translation'}
 
 
+@pytest.mark.parametrize('fetch', [
+    lambda: queries.get_words_for_csv(None, [], True),
+    lambda: queries.get_jlpt_words_for_csv(True),
+])
+def test_projection_passes_unswapped_answer_forms(collection, fetch):
+    fetch()
+    project = stage(pipeline_of(collection), '$project')[0]
+    assert project['answer_word'] == '$word'
+    assert project['answer_reading'] == '$hiragana'
+
+
 def test_jlpt_match_covers_jlpt_groups_and_n1_tag(collection):
     queries.get_jlpt_words_for_csv(True)
     match = stage(pipeline_of(collection), '$match')[0]

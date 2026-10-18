@@ -106,6 +106,16 @@ Same pipeline as Phase 6 for the existing `jlpt_n2` words. Related jisho N2/N1 w
 
 **Result:** 52 modified: 43 → `adv: 1` + `adv. と` note, 8 with と built into the word (ぎゅっと, 真逆…) → `adv: 1`, まじまじと見る lost its stray `adv`. 57 words keep `adv: 4`.
 
+### Phase 9 — Spanish parentheses that revealed the answer (2026-10-18)
+
+The Anki definition card shows `spanish` on its front. 14 JLPT words had Japanese examples in parentheses there that contained the word itself (厳重: `… (厳重注意, 厳重な警備)`). Per the rule that `spanish` stays short, the parentheses moved to `notes`, which the export now masks on the front (`Notes Front`). Applied inline with targeted `$set` on `spanish`/`notes`, filtered on the old `spanish` value; no script kept.
+
+| File | Purpose |
+|------|---------|
+| `snapshots/2026-10-18-spanish-parens-to-notes.json` | Pre-change copy of the 14 docs |
+
+**Result:** 14 modified (尽くす only lost the parentheses: its notes already covered them). JLPT definitions containing the word, its reading or one of its kanji: 14 → 0. Each edit is in `word-log.md`.
+
 ---
 
 ## Data model reminders

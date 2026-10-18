@@ -1,7 +1,8 @@
 from bson import ObjectId
 
 from jap_dev.formatters.word.csv import (
-    MASK_CHAR, clean_notes, format_csv_word, format_related, format_type, format_usage, _mask_shared_kanji
+    MASK_CHAR, clean_notes, format_csv_word, format_related, format_type, format_usage, mask_answer,
+    _mask_shared_kanji
 )
 
 
@@ -36,6 +37,43 @@ def test_mask_keeps_kana_even_if_target_has_it():
 
 def test_mask_without_kanji_in_target_returns_word():
     assert _mask_shared_kanji('一層', 'いっそう') == '一層'
+
+
+# mask_answer
+
+def test_mask_answer_hides_word_and_shared_kanji():
+    assert mask_answer('(S が) ～を 敬う', '敬う', 'うやまう') == '(S が) ～を ■■'
+    assert mask_answer('巧み: habil', '巧妙', 'こうみょう') == '■み: habil'
+
+
+def test_mask_answer_hides_reading_in_hiragana_and_katakana():
+    assert mask_answer('S が (何に) こだわる', '拘る', 'こだわる') == 'S が (何に) ■■■■'
+    assert mask_answer('tambien ガンガン', 'ガンガン', 'がんがん') == 'tambien ■■■■'
+    assert mask_answer('abr. de ボトルネック', 'ネック', None) == 'abr. de ボトル■■■'
+
+
+def test_mask_answer_hides_stem_of_inflecting_words():
+    assert mask_answer('こだわり, こだわって', '拘る', 'こだわる') == '■■■り, ■■■って'
+    assert mask_answer('はかなさ', '儚い', 'はかない') == '■■■さ'
+
+
+def test_mask_answer_keeps_kana_of_words_without_okurigana():
+    # 期待 ends in a kanji, so the い of きたい is not an inflection
+    assert mask_answer('きた, きたい', '期待', 'きたい') == 'きた, ■■■'
+
+
+def test_mask_answer_skips_one_kana_readings():
+    assert mask_answer('きのこ, き', '木', 'き') == 'きのこ, き'
+
+
+def test_mask_answer_masks_longest_form_first():
+    assert mask_answer('かく、掻く', '掻く', 'かく') == '■■、■■'
+
+
+def test_mask_answer_leaves_unrelated_text_and_empty_values():
+    assert mask_answer('Más formal que もっと.', '一層', 'いっそう') == 'Más formal que もっと.'
+    assert mask_answer('', '一層', 'いっそう') == ''
+    assert mask_answer(None, '一層', 'いっそう') is None
 
 
 # format_related
@@ -137,6 +175,18 @@ def test_format_related_basic_edge_has_no_level_and_is_masked():
     assert 'rel-level' not in back
 
 
+def test_format_related_masks_usually_kana_card_with_db_forms():
+    # usually_kana export: word is already kana, the DB forms come in answer_*
+    rel = related_word('拘り')
+    word = {'word': 'こだわる', 'answer_word': '拘る', 'answer_reading': 'こだわる',
+            'related': [{'wordId': rel['_id'], 'type': 'related'}, {'word': 'こだわり', 'type': 'related'}],
+            '_relatedWords': [rel]}
+    front, back = format_related(word)
+    assert f'<span class="rel-word">{MASK_CHAR}り</span>' in front
+    assert '<span class="rel-word">こだわり</span>' not in front
+    assert '<span class="rel-word">拘り</span>' in back and '<span class="rel-word">こだわり</span>' in back
+
+
 def test_format_related_skips_dangling_ids():
     word = {'word': '一層', 'related': [{'wordId': ObjectId(), 'type': 'related'}], '_relatedWords': []}
     assert format_related(word) == ('<ul class="related-list"></ul>', '<ul class="related-list"></ul>')
@@ -193,8 +243,17 @@ def test_format_csv_word_sets_flag_columns_and_drops_internal_fields():
         assert result[flag] is True
     assert result['usage'] == '<span class="tag usage">Rare</span>'
     assert result['notes'] == ''
+    assert result['notes_front'] == ''
     assert 'もっと' in result['related_front'] and 'もっと' in result['related_back']
     assert 'related' not in result and '_relatedWords' not in result
+
+
+def test_format_csv_word_masks_notes_front_only():
+    result = format_csv_word({'id': 'x', 'word': '敬う', 'hiragana': 'うやまう', 'answer_word': '敬う',
+                              'answer_reading': 'うやまう', 'notes': '(S が) ～を 敬う'})
+    assert result['notes'] == '(S が) ～を 敬う'
+    assert result['notes_front'] == '(S が) ～を ■■'
+    assert 'answer_word' not in result and 'answer_reading' not in result
 
 
 def test_format_csv_word_without_tags_or_type():

@@ -5,7 +5,7 @@ from jap_dev.formatters.word.csv import format_all_csv_words
 
 csv_columns = [
     'id', 'word', 'hiragana', 'spanish', 'type', 'notes', 'sentence', 'translation', 'common', 'jlpt_n1', 'expression',
-    'onomatopoeic', 'transitive', 'intransitive', 'related_front', 'related_back', 'usage'
+    'onomatopoeic', 'transitive', 'intransitive', 'related_front', 'related_back', 'usage', 'notes_front'
 ]
 
 # Anki note field names, in csv_columns order. Id is the first field, so Anki
@@ -13,7 +13,7 @@ csv_columns = [
 anki_fields = [
     'Id', 'Word', 'Pronunciation', 'Definition', 'Type', 'Notes', 'Japanese Sentence', 'Translation Sentence',
     'Common', 'JLPT N1', 'Expression', 'Onomatopoeic', 'Transitive', 'Intransitive', 'Related Front',
-    'Related Back', 'Usage'
+    'Related Back', 'Usage', 'Notes Front'
 ]
 
 anki_header = (

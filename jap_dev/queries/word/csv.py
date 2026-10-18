@@ -48,6 +48,9 @@ def get_words_for_csv(collection, tags, usually_kana):
             'id': {'$toString': '$_id'},
             'word': word_projection,
             'hiragana': hiragana_projection,
+            # Unswapped forms, so the formatter can hide the answer on the card front
+            'answer_word': '$word',
+            'answer_reading': '$hiragana',
             'spanish': 1,
             'type': 1,
             'tags': 1,
@@ -85,6 +88,9 @@ def get_jlpt_words_for_csv(usually_kana):
             'id': {'$toString': '$_id'},
             'word': word_projection,
             'hiragana': hiragana_projection,
+            # Unswapped forms, so the formatter can hide the answer on the card front
+            'answer_word': '$word',
+            'answer_reading': '$hiragana',
             'spanish': 1,
             'type': 1,
             'tags': 1,

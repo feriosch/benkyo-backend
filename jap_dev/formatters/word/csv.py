@@ -40,6 +40,29 @@ def _mask_shared_kanji(rel_word, target_word):
     return ''.join(MASK_CHAR if (ch in target_kanji and _is_kanji(ch)) else ch for ch in rel_word)
 
 
+def _shift_kana(text, offset, start, end):
+    return ''.join(chr(ord(ch) + offset) if start <= ch <= end else ch for ch in text)
+
+
+def mask_answer(text, word, reading):
+    """Hides the card's answer in front-side text: the whole word and its reading
+    (hiragana and katakana), then any kanji shared with the word."""
+    if not text:
+        return text
+    word, reading = word or '', reading or ''
+    forms = {word, reading}
+    # Inflecting words end in the same kana as their reading (拘る/こだわる, 儚い/はかない):
+    # also hide the stem, so conjugations and derived nouns (こだわり) don't give it away
+    if word and reading and word[-1] == reading[-1]:
+        forms.add(reading[:-1])
+    forms |= {_shift_kana(form, 0x60, 'ぁ', 'ゖ') for form in set(forms)}  # to katakana
+    forms |= {_shift_kana(form, -0x60, 'ァ', 'ヶ') for form in set(forms)}  # to hiragana
+    # One-kana readings (き, て...) would mask unrelated words
+    for form in sorted((f for f in forms if len(f) >= 2), key=len, reverse=True):
+        text = text.replace(form, MASK_CHAR * len(form))
+    return _mask_shared_kanji(text, word or '')
+
+
 def _build_item(prefix, rel_word, nuance_tags, jlpt_label, note=None, rel_type='related'):
     level_html = f'<span class="rel-level">{jlpt_label}</span>' if jlpt_label else ''
     tags_html = ''
@@ -57,6 +80,13 @@ def _build_item(prefix, rel_word, nuance_tags, jlpt_label, note=None, rel_type='
     return f'<li class="rel rel-{rel_type}">{head}{note_html}</li>'
 
 
+def _answer(word):
+    """The word's DB spelling and reading. The export may have swapped `word` to
+    kana (usually_kana), so the query also passes the originals."""
+    return (word.get('answer_word', word.get('word')) or '',
+            word.get('answer_reading', word.get('hiragana')) or '')
+
+
 def format_related(word):
     """Returns (masked_html, full_html) for front/back of Anki cards."""
     related = word.get('related', [])
@@ -64,7 +94,7 @@ def format_related(word):
     if not related:
         return '', ''
 
-    target_word = word.get('word', '')
+    answer_word, answer_reading = _answer(word)
 
     word_map = {}
     for w in lookup:
@@ -99,7 +129,7 @@ def format_related(word):
         # preferences, register, position) for reference; the front stays clean.
         back_items.append(_build_item(prefix, rel_word, nuance_tags, jlpt_label, note, rel_type))
 
-        masked_word = _mask_shared_kanji(rel_word, target_word)
+        masked_word = mask_answer(rel_word, answer_word, answer_reading)
         front_items.append(_build_item(prefix, masked_word, nuance_tags, jlpt_label, None, rel_type))
 
     wrap = lambda items: '<ul class="related-list">' + ''.join(items) + '</ul>'
@@ -171,8 +201,10 @@ def format_csv_word(word):
     formatted_word['related_front'] = related_front
     formatted_word['related_back'] = related_back
     formatted_word['notes'] = clean_notes(word.get('notes', ''))
-    formatted_word.pop('related', None)
-    formatted_word.pop('_relatedWords', None)
+    # The definition card front shows the notes too, so hide the answer there
+    formatted_word['notes_front'] = mask_answer(formatted_word['notes'], *_answer(word))
+    for internal in ('related', '_relatedWords', 'answer_word', 'answer_reading'):
+        formatted_word.pop(internal, None)
 
     return formatted_word
 
