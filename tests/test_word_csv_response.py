@@ -104,6 +104,7 @@ def test_row_values_in_column_order(fake_words, files_dir):
         'Related Front': '',
         'Related Back': '',
         'Usage': '<span class="tag usage">Rare</span>',
+        'Notes Front': 'Más formal que もっと.',
     }
 
 
@@ -143,6 +144,29 @@ def test_related_html_is_exported(fake_words, files_dir):
     row = dict(zip(responses.anki_fields, rows[0]))
     assert '■段と' in row['Related Front'] and 'en mayor grado' not in row['Related Front']
     assert '一段と' in row['Related Back'] and 'en mayor grado' in row['Related Back']
+
+
+def test_notes_front_hides_the_answer(fake_words, files_dir):
+    fake_words['words'] = [db_word(word='敬う', hiragana='うやまう', answer_word='敬う', answer_reading='うやまう',
+                                   notes='(S が) ～を 敬う')]
+    responses.get_words_csv_response({})
+    _, rows = read_csv(files_dir / 'benkyo.csv')
+    row = dict(zip(responses.anki_fields, rows[0]))
+    assert row['Notes'] == '(S が) ～を 敬う'
+    assert row['Notes Front'] == '(S が) ～を ■■'
+
+
+def test_usually_kana_card_still_masks_kanji_and_kana(fake_words, files_dir):
+    # With usually_kana the query swaps word -> kana and blanks hiragana,
+    # but passes the DB forms as answer_word / answer_reading
+    fake_words['words'] = [db_word(word='こだわる', hiragana='', answer_word='拘る', answer_reading='こだわる',
+                                   notes='S が (何に) こだわる; 拘り: obsesión')]
+    responses.get_words_csv_response({})
+    _, rows = read_csv(files_dir / 'benkyo.csv')
+    row = dict(zip(responses.anki_fields, rows[0]))
+    assert row['Word'] == 'こだわる'
+    assert row['Notes Front'] == 'S が (何に) ■■■■; ■り: obsesión'
+    assert 'answer_word' not in responses.csv_columns
 
 
 # get_words_csv_response parameters
