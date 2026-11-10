@@ -50,7 +50,7 @@ Exporting again on the same day overwrites that file.
 ## 3. Report
 
 Give the full path and the note count the script prints. Then remind the user how to import
-it in Anki (details in `anki/README.md`): File → Import, pick the Benkyo note type and deck,
+it in Anki (details in nando-server's `internal/japanese/anki/README.md`): File → Import, pick the Benkyo note type and deck,
 and set **Existing notes** to **Update**. The file's header lines already set the separator,
 HTML and the field mapping. Id is the key, so re-importing updates notes in place.
 

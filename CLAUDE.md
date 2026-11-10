@@ -27,7 +27,7 @@ Flask 2.1 REST API + MongoDB Atlas for a personal Japanese-study app (vocabulary
 - Basic (text-only) edge: `{word: "天気", type, note, tags?}` — never has a reverse link.
 - Nuance tags: `formal, casual, spoken, written, literary, technical, archaic, polite, humble` — they describe how the *related* word differs from the source.
 - `related.wordId` is stored as ObjectId — always wrap with `ObjectId(...)` in queries/arrayFilters.
-- Anki export (`formatters/word/csv.py`, `anki/*/`): front masks shared kanji with `■`, back shows full words.
+- Anki export (`formatters/word/csv.py`): front masks shared kanji with `■`, back shows full words. The note type's templates and field list now live in nando-server (`internal/japanese/anki/`), next to its port of the JLPT export.
 
 ## Database access (PRODUCTION — there is no separate dev DB)
 
@@ -41,7 +41,7 @@ Flask 2.1 REST API + MongoDB Atlas for a personal Japanese-study app (vocabulary
 ## Environment & commands
 
 - Run locally: `python application.py` (reads `.env` via python-dotenv; `PORT` defaults to 80). Tests: `.venv/Scripts/python -m pytest` (pytest, `tests/`; install with `pip install -r requirements-dev.txt`). They cover the word CSV export only; the DB connection is stubbed in `tests/conftest.py`. The read-only integration test runs when `BENKYO_TEST_MONGODB_URI` is set (`BENKYO_TEST_MONGODB_URI="$MONGODB_URI"` after loading the claude env file). For other endpoints, verify with `curl` against the running server or with mongosh reads.
-- Changes to the word CSV export (`*/word/csv.py`, `anki/`) must keep `python -m pytest` green; add tests for new behavior.
+- Changes to the word CSV export (`*/word/csv.py`) must keep `python -m pytest` green; add tests for new behavior.
 - Exporting a word CSV for Anki ("JLPT csv", "export gaming words") is the `/export-csv` skill (`.claude/skills/export-csv/`): it runs the endpoint's response code directly with Claude's read-only DB access and saves to `C:/Users/Boogs/Downloads/benkyo-anki` by default.
 - Project targets Python 3.11+ (Docker uses 3.11-slim); the machine's default `python` is 3.10, so prefer a venv with 3.11+ if dependencies fail.
 - `requirements.txt` is **UTF-16 LE** encoded — preserve the encoding when editing it.
