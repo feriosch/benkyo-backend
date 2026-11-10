@@ -1,14 +1,10 @@
 import csv
 import re
-from pathlib import Path
 
 import pytest
 from bson import ObjectId
 
 import jap_dev.responses.word.csv as responses
-
-ANKI_DIR = Path(__file__).resolve().parent.parent / 'anki'
-
 
 def db_word(**overrides):
     """A word as returned by the CSV aggregation (after $project)."""
@@ -195,34 +191,3 @@ def test_jlpt_no_words_returns_false(fake_words, files_dir):
     fake_words['words'] = []
     assert responses.get_jlpt_words_csv_response({}) is False
 
-
-# Contract with the Anki templates in anki/
-
-def template_fields(path):
-    return {name.strip() for name in re.findall(r'\{\{[#/^]?([^}]+)\}\}', path.read_text(encoding='utf-8'))}
-
-
-def test_templates_only_use_exported_fields():
-    special = {'FrontSide'}
-    for template in ANKI_DIR.glob('*/*.html'):
-        unknown = template_fields(template) - set(responses.anki_fields) - special
-        assert not unknown, f'{template.relative_to(ANKI_DIR)} uses fields not in the CSV: {unknown}'
-
-
-def test_templates_never_show_the_id():
-    for template in ANKI_DIR.glob('*/*.html'):
-        assert 'Id' not in template_fields(template), template.name
-
-
-def test_related_fields_are_on_the_expected_sides():
-    assert 'Related Front' in template_fields(ANKI_DIR / 'definition_card' / 'front.html')
-    assert 'Related Back' in template_fields(ANKI_DIR / 'definition_card' / 'back.html')
-    assert 'Related Back' in template_fields(ANKI_DIR / 'word_card' / 'back.html')
-    assert 'Related Back' not in template_fields(ANKI_DIR / 'definition_card' / 'front.html')
-    assert 'Related Back' not in template_fields(ANKI_DIR / 'word_card' / 'front.html')
-
-
-def test_readme_lists_fields_in_csv_order():
-    readme = (ANKI_DIR / 'README.md').read_text(encoding='utf-8')
-    listed = re.findall(r'^\d+\. (.+)$', readme, flags=re.M)
-    assert listed == responses.anki_fields

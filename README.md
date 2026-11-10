@@ -75,7 +75,6 @@ benkyo-backend/
 │   └── views/              # Route handlers (controllers)
 ├── scripts/                # Vocabulary relationship / nuance migrations
 │   └── README.md           # Migration timeline & script index
-├── anki/                   # Anki card templates for JLPT CSV export
 ├── tests/                  # pytest suite (word CSV export)
 ├── requirements.txt
 ├── requirements-dev.txt    # requirements + pytest
